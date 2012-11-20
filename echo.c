@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define OPT_ESC 1
 #define OPT_NONL 2
@@ -25,7 +26,7 @@ void usage(const char *execname)
 	"    the beginning of all the text to output\n", execname);
 }
 
-void version()
+void version(void)
 {
 	printf("echo 0.1a\n"
 	"Copyright (C) UnSX Team.\n"
@@ -44,19 +45,6 @@ bool isin(const char c, const char *set)
 	}
 	while ( set[i] != '\0' );
 	return false;
-}
-
-bool eqstr(const char *a, const char *b)
-{
-	int i = 0;
-	do
-	{
-		if ( a[i] != b[i] )
-			return false;
-		i++;
-	}
-	while ( (a[i] != '\0') && (b[i] != '\0') );
-	return true;
 }
 
 const char* toutf8(unsigned long int unichar)
@@ -131,12 +119,12 @@ int main (int argc, char **argv)
 			{
 				if ( argv[i][1] == '-') 
 				{
-					if ( eqstr(argv[i],"--help") )
+					if ( strcmp(argv[i],"--help") == 0 )
 					{
 						usage(argv[0]);
 						return 0;
 					}
-					else if ( eqstr(argv[i],"--version") )
+					else if ( strcmp(argv[i],"--version") == 0 )
 					{
 						version();
 						return 0;

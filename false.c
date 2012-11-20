@@ -6,6 +6,7 @@
 */
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 void usage(const char *execname)
 {
@@ -16,7 +17,7 @@ void usage(const char *execname)
 	"    --version: Print program version\n", execname);
 }
 
-void version()
+void version(void)
 {
 	printf("false 0.1a\n"
 	"Copyright (C) UnSX Team.\n"
@@ -24,26 +25,13 @@ void version()
 	"Released under the MIT License.\n");
 }
 
-bool eqstr(const char *a, const char *b)
-{
-	int i = 0;
-	do
-	{
-		if ( a[i] != b[i] )
-			return false;
-		i++;
-	}
-	while ( (a[i] != '\0') && (b[i] != '\0') );
-	return true;
-}
-
 int main(int argc, char **argv)
 {
 	if ( argc > 1 )
 	{
-		if ( eqstr(argv[1],"--help") )
+		if ( strcmp(argv[1],"--help") == 0 )
 			usage(argv[0]);
-		else if ( eqstr(argv[1],"--version") )
+		else if ( strcmp(argv[1],"--version") == 0 )
 			version();
 	}
 	return 1;
