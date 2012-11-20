@@ -13,24 +13,24 @@
 
 void usage(const char *execname)
 {
-	printf("Usage: %s [options] [string]\n", execname);
-	printf("  Options\n");
-	printf("    -e: Interpret backslash escapes (see echo section in Bash manpage for list)\n");
-	printf("    -E: DO NOT interpret backslash escapes (deprecated)\n");
-	printf("    -n: Don't terminate string with a newline\n");
-	printf("    --help: Show this help\n");
-	printf("    --version: Print program version\n");
-	printf("  String\n");
-	printf("    First sequence to not be recognized as an option indicates\n");
-	printf("    the beginning of all the text to output\n");
+	printf("Usage: %s [options] [string]\n"
+	"  Options\n"
+	"    -e: Interpret backslash escapes (see echo section in Bash manpage for list)\n"
+	"    -E: DO NOT interpret backslash escapes (deprecated)\n"
+	"    -n: Don't terminate string with a newline\n"
+	"    --help: Show this help\n"
+	"    --version: Print program version\n"
+	"  String\n"
+	"    First sequence to not be recognized as an option indicates\n"
+	"    the beginning of all the text to output\n", execname);
 }
 
 void version()
 {
-	printf("echo 0.1a\n");
-	printf("Copyright (C) UnSX Team.\n");
-	printf("Part of Au, the Alice in Userland project.\n");
-	printf("Released under the MIT License.\n");
+	printf("echo 0.1a\n"
+	"Copyright (C) UnSX Team.\n"
+	"Part of Au, the Alice in Userland project.\n"
+	"Released under the MIT License.\n");
 }
 
 bool isin(const char c, const char *set)
@@ -146,6 +146,7 @@ int main (int argc, char **argv)
 				}
 				else if ( isin(argv[i][1],"eEn") )
 				{
+					bool bNoInc = false;
 					j = 1;
 					do
 					{
@@ -156,11 +157,12 @@ int main (int argc, char **argv)
 						else if ( argv[i][j] == 'n' )
 							options = options|OPT_NONL;
 						else
-							break;
+							bNoInc = true;
 						j++;
 					}
-					while ( isin(argv[i][j],"eEn") );
-					i++;
+					while ( argv[i][j] != '\0' );
+					if ( !bNoInc )
+						i++;
 					break;
 				}
 				else
@@ -247,30 +249,19 @@ int main (int argc, char **argv)
 							j+=2;
 							k++;
 						}
-						else if ( argv[i][j+1] == '0' )
+						/* TODO */
+						/*else if ( argv[i][j+1] == '0' )
 						{
-							transl[k] = '\007';
-							j+=2;
-							k++;
 						}
 						else if ( argv[i][j+1] == 'x' )
 						{
-							transl[k] = '\007';
-							j+=2;
-							k++;
 						}
 						else if ( argv[i][j+1] == 'u' )
 						{
-							transl[k] = '\007';
-							j+=2;
-							k++;
 						}
 						else if ( argv[i][j+1] == 'U' )
 						{
-							transl[k] = '\007';
-							j+=2;
-							k++;
-						}
+						}*/
 						else
 						{
 							transl[k] = argv[i][j];
