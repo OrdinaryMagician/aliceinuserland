@@ -71,14 +71,21 @@ int main (int argc, char **argv)
 					j = 1;
 					do
 					{
-						if ( argv[i][j] == 'e' )
-							options = options|OPT_ESC;
-						else if ( argv[i][j] == 'E' )
-							options = options&(~OPT_ESC);
-						else if ( argv[i][j] == 'n' )
-							options = options|OPT_NONL;
-						else
-							bNoInc = true;
+						switch ( argv[i][j] )
+						{
+							case 'e':
+								options = options|OPT_ESC;
+								break;
+							case 'E':
+								options = options&(~OPT_ESC);
+								break;
+							case 'n':
+								options = options|OPT_NONL;
+								break;
+							default:
+								bNoInc = true;
+								break;
+						}
 						j++;
 					}
 					while ( argv[i][j] != '\0' );
@@ -102,150 +109,136 @@ int main (int argc, char **argv)
 				do
 					j++;
 				while ( argv[i][j] != '\0' );
-				transl = (char *)malloc(j+1);
+				transl = (char *)malloc(j+2);
 				j = 0;
 				do
 				{
 					if ( argv[i][j] == '\\' )
 					{
 						j++;
-						if ( argv[i][j] == 'a' )
+						switch ( argv[i][j] )
 						{
-							transl[k] = '\007';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 'b' )
-						{
-							transl[k] = '\010';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 'c' )
-						{
-							transl[k] = '\0';
-							k++;
-							bSkip = true;
-							break;
-						}
-						else if ( (argv[i][j] == 'e') || (argv[i][j] == 'E') )
-						{
-							transl[k] = '\033';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 'f' )
-						{
-							transl[k] = '\014';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 'n' )
-						{
-							transl[k] = '\012';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 'r' )
-						{
-							transl[k] = '\015';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 't' )
-						{
-							transl[k] = '\011';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == 'v' )
-						{
-							transl[k] = '\013';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == '\\' )
-						{
-							transl[k] = '\\';
-							j++;
-							k++;
-						}
-						else if ( argv[i][j] == '0' )
-						{
-							j++;
-							nc = 3;
-							transl[k] = 0;
-							while( isin(argv[i][j],"01234567") && (nc > 0) )
-							{
-								transl[k] = transl[k]*8 + ctoh(argv[i][j]);
-								nc--;
+							case 'a':
+								transl[k] = '\007';
 								j++;
-							}
-							k++;
-						}
-						else if ( argv[i][j] == 'x' )
-						{
-							j++;
-							nc = 2;
-							transl[k] = 0;
-							while( isin(argv[i][j],"0123456789abcdefABCDEF") && (nc > 0) )
-							{
-								transl[k] = transl[k]*16 + ctoh(argv[i][j]);
-								nc--;
-								j++;
-							}
-							k++;
-						}
-						else if ( argv[i][j] == 'u' )
-						{
-							j++;
-							nc = 4;
-							transl[k] = 0;
-							unic = 0;
-							while( isin(argv[i][j],"0123456789abcdefABCDEF") && (nc > 0) )
-							{
-								unic = unic*16 + ctoh(argv[i][j]);
-								nc--;
-								j++;
-							}
-							funic = toutf8(unic);
-							nc = 0;
-							do
-							{
-								transl[k] = funic[nc];
 								k++;
-								nc++;
-							}
-							while ( funic[nc] != '\0' );
-						}
-						else if ( argv[i][j] == 'U' )
-						{
-						
-							j++;
-							nc = 8;
-							transl[k] = 0;
-							unic = 0;
-							while( isin(argv[i][j],"0123456789abcdefABCDEF") && (nc > 0) )
-							{
-								unic = unic*16 + ctoh(argv[i][j]);
-								nc--;
+								break;
+							case 'b':
+								transl[k] = '\010';
 								j++;
-							}
-							funic = toutf8(unic);
-							nc = 0;
-							do
-							{
-								transl[k] = funic[nc];
 								k++;
-								nc++;
-							}
-							while ( funic[nc] != '\0' );
-						}
-						else
-						{
-							transl[k] = argv[i][j];
-							j++;
-							k++;
+								break;
+							case 'c':
+								transl[k] = '\0';
+								k++;
+								bSkip = true;
+								break;
+							case 'e':
+							case 'E':
+								transl[k] = '\033';
+								j++;
+								k++;
+								break;
+							case 'f':
+								transl[k] = '\014';
+								j++;
+								k++;
+								break;
+							case 'n':
+								transl[k] = '\012';
+								j++;
+								k++;
+								break;
+							case 'r':
+								transl[k] = '\015';
+								j++;
+								k++;
+								break;
+							case 't':
+								transl[k] = '\011';
+								j++;
+								k++;
+								break;
+							case 'v':
+								transl[k] = '\013';
+								j++;
+								k++;
+								break;
+							case '\\':
+								transl[k] = '\\';
+								j++;
+								k++;
+								break;
+							case '0':
+								j++;
+								nc = 3;
+								transl[k] = 0;
+								while( isin(argv[i][j],"01234567") && (nc > 0) )
+								{
+									transl[k] = transl[k]*8 + ctoh(argv[i][j]);
+									nc--;
+									j++;
+								}
+								k++;
+								break;
+							case 'x':
+								j++;
+								nc = 2;
+								transl[k] = 0;
+								while( isin(argv[i][j],"0123456789abcdefABCDEF") && (nc > 0) )
+								{
+									transl[k] = transl[k]*16 + ctoh(argv[i][j]);
+									nc--;
+									j++;
+								}
+								k++;
+								break;
+							case 'u':
+								j++;
+								nc = 4;
+								transl[k] = 0;
+								unic = 0;
+								while( isin(argv[i][j],"0123456789abcdefABCDEF") && (nc > 0) )
+								{
+									unic = unic*16 + ctoh(argv[i][j]);
+									nc--;
+									j++;
+								}
+								funic = toutf8(unic);
+								nc = 0;
+								do
+								{
+									transl[k] = funic[nc];
+									k++;
+									nc++;
+								}
+								while ( funic[nc] != '\0' );
+								break;
+							case 'U':
+								j++;
+								nc = 8;
+								transl[k] = 0;
+								unic = 0;
+								while( isin(argv[i][j],"0123456789abcdefABCDEF") && (nc > 0) )
+								{
+									unic = unic*16 + ctoh(argv[i][j]);
+									nc--;
+									j++;
+								}
+								funic = toutf8(unic);
+								nc = 0;
+								do
+								{
+									transl[k] = funic[nc];
+									k++;
+									nc++;
+								}
+								while ( funic[nc] != '\0' );
+								break;
+							default:
+								transl[k] = argv[i][j];
+								j++;
+								k++;
 						}
 					}
 					else
@@ -255,23 +248,21 @@ int main (int argc, char **argv)
 						k++;
 					}
 				}
-				while ( argv[i][j] != '\0' );
-				transl[k] = '\0';
+				while ( (argv[i][j] != '\0') && !bSkip );
 				if ( (i+1) == argc )
 				{
 					if ( !(options&OPT_NONL) )
 					{
 						transl[k] = '\n';
 						k++;
-						transl[k] = '\0';
 					}
 				}
 				else
 				{
 					transl[k] = ' ';
 					k++;
-					transl[k] = '\0';
 				}
+				transl[k] = '\0';
 				nprints(transl,k);
 				free(transl);
 			}
