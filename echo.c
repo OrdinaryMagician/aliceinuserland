@@ -56,23 +56,26 @@ int main (int argc, char **argv)
 	bool skip = false;
 	while ( (i < argc) && !skip )
 	{
-		if ( options&OPT_ESC )
+		if ( !(options&OPT_ESC) )
 		{
-			j = 0;
-			while ( !skip )
-			{
-				sch = descape(argv[i]+j);
-				j += sch;
-				if ( sch == 0 )
-					skip = true;
-			}
-			if ( i < (argc-1) )
-				putchar(' ');
-			else
-				putchar('\n');
-		}
-		else
 			(i+1) == argc ? (options&OPT_NONL ? printf("%s",argv[i]) : printf("%s\n",argv[i])) : printf("%s ",argv[i]);
+			i++;
+			continue;
+		}
+		j = 0;
+		while ( !skip )
+		{
+			sch = descape(argv[i]+j);
+			j += sch;
+			if ( sch == -1 )
+				return 0;
+			if ( sch == 0 )
+				skip = true;
+		}
+		if ( i < (argc-1) )
+			putchar(' ');
+		else
+			putchar('\n');
 		i++;
 	}
 	return 0;

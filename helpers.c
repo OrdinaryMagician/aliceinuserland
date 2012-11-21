@@ -1,5 +1,5 @@
 /*
-	helpers.c : some few helper functions
+	helpers.c : some "few" helper functions
 	(C)2012 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
@@ -16,13 +16,12 @@
 extern bool isin(const char c, const char *set)
 {
 	int i = 0;
-	do
+	while ( set[i] != '\0' )
 	{
 		if ( c == set[i] )
 			return true;
 		i++;
 	}
-	while ( set[i] != '\0' );
 	return false;
 }
 
@@ -47,8 +46,7 @@ extern int ctoh(const unsigned char c)
 		return (c  - 'a') + 10;
 	else if ( c >= 'A' && c <= 'F' )
 		return (c  - 'A') + 10;
-	else
-		return 0;
+	return 0;
 }
 
 /*
@@ -159,7 +157,8 @@ extern char* toutf8(unsigned long int unichar)
 
 /*
    decode backslash escapes at beginning of string. returns number of
-   characters that should be skipped in input. return 0 if a "\c" or a null char was found
+   characters that should be skipped in input.
+   special cases: return -1 if a "\c" was found or 0 if it's a null character
 */
 extern int descape(const char *str)
 {
@@ -167,96 +166,97 @@ extern int descape(const char *str)
 	unsigned char trch = 0;
 	unsigned long int unich = 0;
 
-	if ( str[0] == '\\' )
+	if ( str[0] != '\\' )
 	{
-		i++;
-		switch ( str[i] )
-		{
-			case 'a':
-				putchar('\007');
-				return 2;
-			case 'b':
-				putchar('\010');
-				return 2;
-			case 'c':
-				return 0;
-			case 'e':
-			case 'E':
-				putchar('\033');
-				return 2;
-			case 'f':
-				putchar('\014');
-				return 2;
-			case 'n':
-				putchar('\012');
-				return 2;
-			case 'r':
-				putchar('\015');
-				return 2;
-			case 't':
-				putchar('\011');
-				return 2;
-			case 'v':
-				putchar('\013');
-				return 2;
-			case '\\':
-				putchar('\\');
-				return 2;
-			case '0':
-				i++;
-				nc = 3;
-				trch = 0;
-				while( isin(str[i],"01234567") && (nc > 0) )
-				{
-					trch = trch*8 + ctoh(str[i]);
-					nc--;
-					i++;
-				}
-				putchar(trch);
-				return i;
-			case 'x':
-				i++;
-				nc = 2;
-				trch = 0;
-				while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
-				{
-					trch = trch*16 + ctoh(str[i]);
-					nc--;
-					i++;
-				}
-				putchar(trch);
-				return i;
-			case 'u':
-				i++;
-				nc = 4;
-				unich = 0;
-				while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
-				{
-					unich = unich*16 + ctoh(str[i]);
-					nc--;
-					i++;
-				}
-				pututf8(unich);
-				return i;
-			case 'U':
-				i++;
-				nc = 8;
-				unich = 0;
-				while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
-				{
-					unich = unich*16 + ctoh(str[i]);
-					nc--;
-					i++;
-				}
-				pututf8(unich);
-				return i;
-			default:
-				putchar(str[i]);
-				return 2;
-		}
+		if ( str[0] == 0 )
+			return 0;
+		putchar(str[0]);
+		return 1;
 	}
-	else if ( str[0] == 0 )
-		return 0;
-	putchar(str[0]);
-	return 1;
+	i++;
+	switch ( str[i] )
+	{
+		case 'a':
+			putchar('\007');
+			return 2;
+		case 'b':
+			putchar('\010');
+			return 2;
+		case 'c':
+			return -1;
+		case 'e':
+		case 'E':
+			putchar('\033');
+			return 2;
+		case 'f':
+			putchar('\014');
+			return 2;
+		case 'n':
+			putchar('\012');
+			return 2;
+		case 'r':
+			putchar('\015');
+			return 2;
+		case 't':
+			putchar('\011');
+			return 2;
+		case 'v':
+			putchar('\013');
+			return 2;
+		case '\\':
+			putchar('\\');
+			return 2;
+		case '0':
+			i++;
+			nc = 3;
+			trch = 0;
+			while( isin(str[i],"01234567") && (nc > 0) )
+			{
+				trch = trch*8 + ctoh(str[i]);
+				nc--;
+				i++;
+			}
+			putchar(trch);
+			return i;
+		case 'x':
+			i++;
+			nc = 2;
+			trch = 0;
+			while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+			{
+				trch = trch*16 + ctoh(str[i]);
+				nc--;
+				i++;
+			}
+			putchar(trch);
+			return i;
+		case 'u':
+			i++;
+			nc = 4;
+			unich = 0;
+			while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+			{
+				unich = unich*16 + ctoh(str[i]);
+				nc--;
+				i++;
+			}
+			pututf8(unich);
+			return i;
+		case 'U':
+			i++;
+			nc = 8;
+			unich = 0;
+			while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+			{
+				unich = unich*16 + ctoh(str[i]);
+				nc--;
+				i++;
+			}
+			pututf8(unich);
+			return i;
+		default:
+			putchar('\\');
+			putchar(str[i]);
+			return 2;
+	}
 }
