@@ -4,11 +4,15 @@
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 
+/*
+   check if a character is inside the specified set
+*/
 extern bool isin(const char c, const char *set)
 {
 	int i = 0;
@@ -22,6 +26,9 @@ extern bool isin(const char c, const char *set)
 	return false;
 }
 
+/*
+   something like write(1,s,len) but with stdio functions
+*/
 extern void nprints(const char *s, const int len)
 {
 	int i;
@@ -29,6 +36,9 @@ extern void nprints(const char *s, const int len)
 		putchar(s[i]);
 }
 
+/*
+   try to interpret a character as an hexadecimal digit
+*/
 extern int ctoh(const unsigned char c)
 {
 	if ( c >= '0' && c <= '9' )
@@ -41,6 +51,10 @@ extern int ctoh(const unsigned char c)
 		return 0;
 }
 
+/*
+   print the UTF-8 char sequence corresponding to a specific unicode value
+
+*/
 extern void pututf8(unsigned long int unichar)
 {
 	if ( unichar <= 0x7f )
@@ -82,6 +96,9 @@ extern void pututf8(unsigned long int unichar)
 	}
 }
 
+/*
+   create a string from an unicode character value and return a pointer to it
+*/
 extern char* toutf8(unsigned long int unichar)
 {
 	char *retstr = NULL;
@@ -137,4 +154,109 @@ extern char* toutf8(unsigned long int unichar)
 		retstr[6] = '\0';
 	}
 	return retstr;
+}
+
+
+/*
+   decode backslash escapes at beginning of string. returns number of
+   characters that should be skipped in input. return 0 if a "\c" or a null char was found
+*/
+extern int descape(const char *str)
+{
+	int i = 0, nc = 0;
+	unsigned char trch = 0;
+	unsigned long int unich = 0;
+
+	if ( str[0] == '\\' )
+	{
+		i++;
+		switch ( str[i] )
+		{
+			case 'a':
+				putchar('\007');
+				return 2;
+			case 'b':
+				putchar('\010');
+				return 2;
+			case 'c':
+				return 0;
+			case 'e':
+			case 'E':
+				putchar('\033');
+				return 2;
+			case 'f':
+				putchar('\014');
+				return 2;
+			case 'n':
+				putchar('\012');
+				return 2;
+			case 'r':
+				putchar('\015');
+				return 2;
+			case 't':
+				putchar('\011');
+				return 2;
+			case 'v':
+				putchar('\013');
+				return 2;
+			case '\\':
+				putchar('\\');
+				return 2;
+			case '0':
+				i++;
+				nc = 3;
+				trch = 0;
+				while( isin(str[i],"01234567") && (nc > 0) )
+				{
+					trch = trch*8 + ctoh(str[i]);
+					nc--;
+					i++;
+				}
+				putchar(trch);
+				return i;
+			case 'x':
+				i++;
+				nc = 2;
+				trch = 0;
+				while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+				{
+					trch = trch*16 + ctoh(str[i]);
+					nc--;
+					i++;
+				}
+				putchar(trch);
+				return i;
+			case 'u':
+				i++;
+				nc = 4;
+				unich = 0;
+				while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+				{
+					unich = unich*16 + ctoh(str[i]);
+					nc--;
+					i++;
+				}
+				pututf8(unich);
+				return i;
+			case 'U':
+				i++;
+				nc = 8;
+				unich = 0;
+				while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+				{
+					unich = unich*16 + ctoh(str[i]);
+					nc--;
+					i++;
+				}
+				pututf8(unich);
+				return i;
+			default:
+				putchar(str[i]);
+				return 2;
+		}
+	}
+	else if ( str[0] == 0 )
+		return 0;
+	putchar(str[0]);
+	return 1;
 }
