@@ -41,6 +41,47 @@ extern int ctoh(const unsigned char c)
 		return 0;
 }
 
+extern void pututf8(unsigned long int unichar)
+{
+	if ( unichar <= 0x7f )
+		putchar(unichar%0x80);
+	else if ( unichar <= 0x7ff )
+	{
+		putchar(0xC0 + (unichar>>6)%0x20);
+		putchar(0x80 + unichar%0x40);
+	}
+	else if ( unichar <= 0xffff )
+	{
+		putchar(0xE0 + (unichar>>12)%0x10);
+		putchar(0x80 + (unichar>>6)%0x40);
+		putchar(0x80 + unichar%0x40);
+	}
+	else if ( unichar <= 0x1fffff )
+	{
+		putchar(0xF0 + (unichar>>18)%0x08);
+		putchar(0x80 + (unichar>>12)%0x40);
+		putchar(0x80 + (unichar>>6)%0x40);
+		putchar(0x80 + unichar%0x40);
+	}
+	else if ( unichar <= 0x3ffffff )
+	{
+		putchar(0xF8 + (unichar>>24)%0x04);
+		putchar(0x80 + (unichar>>18)%0x40);
+		putchar(0x80 + (unichar>>12)%0x40);
+		putchar(0x80 + (unichar>>6)%0x40);
+		putchar(0x80 + unichar%0x40);
+	}
+	else if ( unichar <= 0x7fffffff )
+	{
+		putchar(0xFC + (unichar>>30)%0x02);
+		putchar(0x80 + (unichar>>24)%0x40);
+		putchar(0x80 + (unichar>>18)%0x40);
+		putchar(0x80 + (unichar>>12)%0x40);
+		putchar(0x80 + (unichar>>6)%0x40);
+		putchar(0x80 + unichar%0x40);
+	}
+}
+
 extern char* toutf8(unsigned long int unichar)
 {
 	char *retstr = NULL;

@@ -22,3 +22,13 @@ It's not like I hate GNU and the FSF or anything (well, I do dislike them a bit)
 From what I've seen, GNU code is gross (really), unclean, bloated and not very easy to follow. I'm not the only one with this opinion, apparently.
 
 Also I want to have a nice learning experience while I write all this.
+
+## POSIX compliance
+
+Au is only partially POSIX compliant. It kinda has too much extra spice on top of any standards compliance (while still keeping things small).
+
+## Coding style
+
+If you have any complaints about my coding style, you can send them to /dev/null, thank you very much.
+
+If I had gone with a license such as the ULS you would've been required by law to NOT criticize my coding style, but I think that's probably too mean. Besides, the ULS isn't even a serious license.
