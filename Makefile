@@ -26,7 +26,7 @@ clang-obj:
 	$(CC_clang) $(CFLAGS) -c true.c -o obj/true.o
 	$(CC_clang) $(CFLAGS) -c false.c -o obj/false.o
 clean:
-	rm -r bin
-	rm -r obj
+	rm -rf bin
+	rm -rf obj
 install:
 	# we don't allow installing yet, sorry for the inconvenience
