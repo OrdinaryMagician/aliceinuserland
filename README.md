@@ -27,6 +27,12 @@ Also I want to have a nice learning experience while I write all this.
 
 Au is only partially POSIX compliant. It kinda has too much extra spice on top of any standards compliance (while still keeping things small).
 
+## Suggestions and criticism
+
+As long as you're not being rude I accept any suggestions about optimizing and/or cleaning the code.
+
+Right now I'd like to thank the people of /g/, mostly from the #/g/sicp IRC channel (nice place, BTW), their advice has really served me well.
+
 ## Coding style
 
 If you have any complaints about my coding style, you can send them to /dev/null, thank you very much.
