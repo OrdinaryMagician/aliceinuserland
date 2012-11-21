@@ -5,7 +5,6 @@
 	Released under the MIT License.
 */
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
 
 void usage(const char *execname)
