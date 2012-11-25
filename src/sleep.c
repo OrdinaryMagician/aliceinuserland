@@ -31,6 +31,6 @@ int main (int argc, char **argv)
 	waiter.it_value.tv_usec = sleepmicr;
 	setitimer(ITIMER_REAL, &waiter, 0);
 	signal(SIGALRM,endwait);
-	while (1);
+	while(getchar());
 	return 0;
 }
