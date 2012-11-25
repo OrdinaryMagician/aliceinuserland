@@ -1,6 +1,6 @@
 CFLAGS := -std=c99 -Wall -Wextra -O2 -pipe
 LDFLAGS := -Wall -Wextra -O1
-PREFIX =? /usr/local
+PREFIX ?= /usr/local
 .PHONY : clean install
 all: echo true false sleep
 echo: echo-obj helpers-obj
@@ -24,5 +24,14 @@ helpers-obj:
 clean:
 	rm -f bin/*
 	rm -f obj/*
-install:
-	cp bin/ "$(PREFIX)"
+install: install-echo install-true install-false install-sleep
+install-echo: install-prepare
+	cp bin/echo "$(PREFIX)/bin/"
+install-true: install-prepare
+	cp bin/true "$(PREFIX)/bin/"
+install-false: install-prepare
+	cp bin/false "$(PREFIX)/bin/"
+install-sleep: install-prepare
+	cp bin/sleep "$(PREFIX)/bin/"
+install-prepare:
+	mkdir -p "$(PREFIX)/bin"
