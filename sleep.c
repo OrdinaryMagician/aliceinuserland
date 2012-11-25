@@ -18,18 +18,17 @@ void endwait ()
 int main (int argc, char **argv)
 {
 	long sleepsecs = 0;
-	long sleepnano = 0;
+	long sleepmicr = 0;
 	if ( argc > 1 )
 	{
 		sleepsecs = atol(argv[1]);
-		sleepnanos = (atof(argv[1])-sleepsecs)*1000000000;
-		printf("sleep time: %ld s %ld ns\n",sleepsecs,sleepnano);
+		sleepmicr = (atof(argv[1])-sleepsecs)*1000000;
 	}
 	struct itimerval waiter;
 	waiter.it_interval.tv_sec = 0;
 	waiter.it_interval.tv_usec = 0;
 	waiter.it_value.tv_sec = sleepsecs;
-	waiter.it_value.tv_usec = 0;
+	waiter.it_value.tv_usec = sleepmicr;
 	setitimer(ITIMER_REAL, &waiter, 0);
 	signal(SIGALRM,endwait);
 	while (1);
