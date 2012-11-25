@@ -4,6 +4,7 @@
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
+#include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/time.h>
@@ -16,13 +17,18 @@ void endwait ()
 
 int main (int argc, char **argv)
 {
-	long sleeptime = 0;
+	long sleepsecs = 0;
+	long sleepnano = 0;
 	if ( argc > 1 )
-		sleeptime = atol(argv[1]);
+	{
+		sleepsecs = atol(argv[1]);
+		sleepnanos = (atof(argv[1])-sleepsecs)*1000000000;
+		printf("sleep time: %ld s %ld ns\n",sleepsecs,sleepnano);
+	}
 	struct itimerval waiter;
 	waiter.it_interval.tv_sec = 0;
 	waiter.it_interval.tv_usec = 0;
-	waiter.it_value.tv_sec = sleeptime;
+	waiter.it_value.tv_sec = sleepsecs;
 	waiter.it_value.tv_usec = 0;
 	setitimer(ITIMER_REAL, &waiter, 0);
 	signal(SIGALRM,endwait);
