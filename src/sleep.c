@@ -4,8 +4,8 @@
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
-#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <signal.h>
 #include <sys/time.h>
 
@@ -31,6 +31,6 @@ int main (int argc, char **argv)
 	waiter.it_value.tv_usec = sleepmicr;
 	setitimer(ITIMER_REAL, &waiter, 0);
 	signal(SIGALRM,endwait);
-	while(getchar());
+	pause();
 	return 0;
 }
