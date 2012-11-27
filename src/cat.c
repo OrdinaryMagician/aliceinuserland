@@ -12,20 +12,22 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-bool direct = false;
+#define BLOCKSIZE 4096
 
-int dspew( const char *fname )
+bool noblock = false;
+
+int spew( const char *fname, int blocksize )
 {
 	int filedes = 0;
 	int retrn = 0;
-	char ch = 0;
+	char block[blocksize];
 	if ( strcmp(fname,"-") == 0 )
 	{
 		do
 		{
-			retrn = read(STDIN_FILENO,&ch,1);
+			retrn = read(STDIN_FILENO,&block,blocksize);
 			if ( retrn > 0 )
-				write(STDOUT_FILENO,&ch,1);
+				write(STDOUT_FILENO,&block,retrn);
 			if ( retrn == -1 )
 			{
 				fprintf(stderr,"cat: stdin: %s\n",strerror(errno));
@@ -42,9 +44,9 @@ int dspew( const char *fname )
 	}
 	do
 	{
-		retrn = read(filedes,&ch,1);
+		retrn = read(filedes,&block,blocksize);
 		if ( retrn > 0 )
-			write(STDOUT_FILENO,&ch,1);
+			write(STDOUT_FILENO,&block,retrn);
 		if ( retrn == -1 )
 		{
 			fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
@@ -56,43 +58,21 @@ int dspew( const char *fname )
 	return 0;
 }
 
-int spew( const char *fname )
-{
-	int ch = 0;
-	if ( strcmp(fname,"-") == 0 )
-	{
-		while ((ch = getchar()) != EOF)
-			putchar(ch);
-		return 0;
-	}
-	FILE *fil;
-	if ( (fil = fopen(fname,"rb")) == NULL )
-	{
-		fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
-		return 1;
-	}
-	while ((ch = fgetc(fil)) != EOF)
-		putchar(ch);
-	fclose(fil);
-	return 0;
-}
-
 int main( int argc, char **argv )
 {
-	int ch = 0;
 	if ( argc <= 1 )
-		return spew("-");
+		return spew("-", BLOCKSIZE);
 	int i = 0;
 	for ( i=1;i<argc;i++ )
 	{
 		if ( (i==1) && (strcmp(argv[i],"-u") == 0) )
 		{
-			direct = true;
+			noblock = true;
 			if ( argc == 2 )
-				return dspew("-");
+				return spew("-", 1);
 			continue;
 		}
-		if ( direct ? dspew(argv[i]) : spew(argv[i]) )
+		if ( spew(argv[i], (noblock ? 1 : BLOCKSIZE)) )
 				return 1;
 	}
 	return 0;
