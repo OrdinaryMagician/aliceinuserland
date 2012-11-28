@@ -2,7 +2,7 @@ CFLAGS := -std=c99 -Wall -Wextra -O2 -pipe
 LDFLAGS := -Wall -Wextra -O1
 PREFIX ?= /usr/local
 .PHONY : clean install
-all: echo true false sleep cat
+all: echo true false sleep cat yes
 echo: echo-obj helpers-obj
 	$(CC) $(LDFLAGS) obj/helpers.o obj/echo.o -o bin/echo
 echo-obj:
@@ -23,12 +23,16 @@ cat: cat-obj
 	$(CC) $(LDFLAGS) obj/cat.o -o bin/cat
 cat-obj:
 	$(CC) $(CFLAGS) -c src/cat.c -o obj/cat.o
+yes: yes-obj
+	$(CC) $(LDFLAGS) obj/yes.o -o bin/yes
+yes-obj:
+	$(CC) $(CFLAGS) -c src/yes.c -o obj/yes.o
 helpers-obj:
 	$(CC) $(CFLAGS) -c src/helpers.c -o obj/helpers.o
 clean:
 	rm -f bin/*
 	rm -f obj/*
-install: install-echo install-true install-false install-sleep install-cat
+install: install-echo install-true install-false install-sleep install-cat install-yes
 install-echo: install-prepare
 	cp bin/echo "$(PREFIX)/bin/"
 install-true: install-prepare
@@ -39,5 +43,7 @@ install-sleep: install-prepare
 	cp bin/sleep "$(PREFIX)/bin/"
 install-cat: install-prepare
 	cp bin/cat "$(PREFIX)/bin/"
+install-yes: install-prepare
+	cp bin/yes "$(PREFIX)/bin/"
 install-prepare:
 	mkdir -p "$(PREFIX)/bin"
