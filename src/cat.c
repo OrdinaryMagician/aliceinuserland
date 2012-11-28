@@ -25,9 +25,9 @@ int spew( const char *fname, int blocksize )
 	{
 		do
 		{
-			retrn = read(STDIN_FILENO,&block,blocksize);
+			retrn = read(STDIN_FILENO,block,blocksize);
 			if ( retrn > 0 )
-				write(STDOUT_FILENO,&block,retrn);
+				write(STDOUT_FILENO,block,retrn);
 			if ( retrn == -1 )
 			{
 				fprintf(stderr,"cat: stdin: %s\n",strerror(errno));
@@ -44,9 +44,9 @@ int spew( const char *fname, int blocksize )
 	}
 	do
 	{
-		retrn = read(filedes,&block,blocksize);
+		retrn = read(filedes,block,blocksize);
 		if ( retrn > 0 )
-			write(STDOUT_FILENO,&block,retrn);
+			write(STDOUT_FILENO,block,retrn);
 		if ( retrn == -1 )
 		{
 			fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
