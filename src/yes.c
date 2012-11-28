@@ -12,16 +12,11 @@ int main (int argc, char **argv)
 	if ( argc > 1 )
 	{
 		while(1)
-		{
 			for(i=1;i<argc;i++)
-			{
-				fputs(argv[i],stdout);
-				(i < (argc-1)) ? putchar(' ') : putchar('\n');
-			}
-		}
+				(i < (argc-1)) ? printf("%s ",argv[i]) : printf("%s\n",argv[i]);
 		return 0;
 	}
 	while(1)
-		fputs("y\n",stdout);
+		printf("y\n");
 	return 0;
 }
