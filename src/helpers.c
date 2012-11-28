@@ -260,3 +260,4 @@ extern int descape(const char *str)
 			return 2;
 	}
 }
+
