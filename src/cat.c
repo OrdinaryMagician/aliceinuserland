@@ -54,7 +54,7 @@ int main( int argc, char **argv )
 	blksize = ( (gotblk != NULL) && (atoi(gotblk) > 0) ) ? atoi(gotblk) : BLOCKSIZE;
 	if ( argc <= 1 )
 		return spew("-",blksize);
-	int i = 0;
+	int i = 1;
 	if ( strcmp(argv[i],"-u") == 0 )
 	{
 		noblock = true;
