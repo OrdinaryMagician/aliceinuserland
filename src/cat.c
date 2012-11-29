@@ -55,17 +55,18 @@ int main( int argc, char **argv )
 	if ( argc <= 1 )
 		return spew("-",blksize);
 	int i = 0;
-	for ( i=1; i<argc; i++ )
+	if ( (strcmp(argv[i],"-u") == 0)
 	{
-		if ( (i==1) && (strcmp(argv[i],"-u") == 0) )
-		{
-			noblock = true;
-			if ( argc == 2 )
-				return spew("-",1);
-			continue;
-		}
+		noblock = true;
+		i++;
+	}
+	if ( argc == i )
+		return spew("-",1);
+	while ( i < argc )
+	{
 		if ( spew(argv[i],( noblock ? 1 : blksize )) )
 			return 1;
+		i++;
 	}
 	return 0;
 }
