@@ -25,18 +25,18 @@ bool getopts(const char *arg)
 	{
 		switch (arg[i] )
 		{
-			case 'e':
-				options = options|OPT_ESC;
-				break;
-			case 'E':
-				options = options&(~OPT_ESC);
-				break;
-			case 'n':
-				options = options|OPT_NONL;
-				break;
-			default:
-				skipme = false;
-				break;
+		case 'e':
+			options = options|OPT_ESC;
+			break;
+		case 'E':
+			options = options&(~OPT_ESC);
+			break;
+		case 'n':
+			options = options|OPT_NONL;
+			break;
+		default:
+			skipme = false;
+			break;
 		}
 		i++;
 	}

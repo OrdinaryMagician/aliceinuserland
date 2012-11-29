@@ -7,4 +7,3 @@ void pututf8(unsigned long int unichar);
 char* toutf8(unsigned long int unichar);
 int descape(const char *str);
 #endif
-

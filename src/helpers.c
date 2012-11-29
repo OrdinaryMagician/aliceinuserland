@@ -51,7 +51,6 @@ extern int ctoh(const unsigned char c)
 
 /*
    print the UTF-8 char sequence corresponding to a specific unicode value
-
 */
 extern void pututf8(unsigned long int unichar)
 {
@@ -176,88 +175,88 @@ extern int descape(const char *str)
 	i++;
 	switch ( str[i] )
 	{
-		case 'a':
-			putchar('\007');
-			return 2;
-		case 'b':
-			putchar('\010');
-			return 2;
-		case 'c':
-			return -1;
-		case 'e':
-		case 'E':
-			putchar('\033');
-			return 2;
-		case 'f':
-			putchar('\014');
-			return 2;
-		case 'n':
-			putchar('\012');
-			return 2;
-		case 'r':
-			putchar('\015');
-			return 2;
-		case 't':
-			putchar('\011');
-			return 2;
-		case 'v':
-			putchar('\013');
-			return 2;
-		case '\\':
-			putchar('\\');
-			return 2;
-		case '0':
+	case 'a':
+		putchar('\007');
+		return 2;
+	case 'b':
+		putchar('\010');
+		return 2;
+	case 'c':
+		return -1;
+	case 'e':
+	case 'E':
+		putchar('\033');
+		return 2;
+	case 'f':
+		putchar('\014');
+		return 2;
+	case 'n':
+		putchar('\012');
+		return 2;
+	case 'r':
+		putchar('\015');
+		return 2;
+	case 't':
+		putchar('\011');
+		return 2;
+	case 'v':
+		putchar('\013');
+		return 2;
+	case '\\':
+		putchar('\\');
+		return 2;
+	case '0':
+		i++;
+		nc = 3;
+		trch = 0;
+		while( isin(str[i],"01234567") && (nc > 0) )
+		{
+			trch = trch*8 + ctoh(str[i]);
+			nc--;
 			i++;
-			nc = 3;
-			trch = 0;
-			while( isin(str[i],"01234567") && (nc > 0) )
-			{
-				trch = trch*8 + ctoh(str[i]);
-				nc--;
-				i++;
-			}
-			putchar(trch);
-			return i;
-		case 'x':
+		}
+		putchar(trch);
+		return i;
+	case 'x':
+		i++;
+		nc = 2;
+		trch = 0;
+		while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+		{
+			trch = trch*16 + ctoh(str[i]);
+			nc--;
 			i++;
-			nc = 2;
-			trch = 0;
-			while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
-			{
-				trch = trch*16 + ctoh(str[i]);
-				nc--;
-				i++;
-			}
-			putchar(trch);
-			return i;
-		case 'u':
+		}
+		putchar(trch);
+		return i;
+	case 'u':
+		i++;
+		nc = 4;
+		unich = 0;
+		while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+		{
+			unich = unich*16 + ctoh(str[i]);
+			nc--;
 			i++;
-			nc = 4;
-			unich = 0;
-			while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
-			{
-				unich = unich*16 + ctoh(str[i]);
-				nc--;
-				i++;
-			}
-			pututf8(unich);
-			return i;
-		case 'U':
+		}
+		pututf8(unich);
+		return i;
+	case 'U':
+		i++;
+		nc = 8;
+		unich = 0;
+		while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
+		{
+			unich = unich*16 + ctoh(str[i]);
+			nc--;
 			i++;
-			nc = 8;
-			unich = 0;
-			while( isin(str[i],"0123456789abcdefABCDEF") && (nc > 0) )
-			{
-				unich = unich*16 + ctoh(str[i]);
-				nc--;
-				i++;
-			}
-			pututf8(unich);
-			return i;
-		default:
-			putchar('\\');
-			putchar(str[i]);
-			return 2;
+		}
+		pututf8(unich);
+		return i;
+	default:
+		putchar('\\');
+		putchar(str[i]);
+		return 2;
 	}
 }
 
