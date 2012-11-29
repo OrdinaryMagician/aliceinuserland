@@ -12,7 +12,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define BLOCKSIZE 4096
+#ifndef BLOCKSIZE
+#define BLOCKSIZE 131072
+#endif
 
 bool noblock = false;
 
