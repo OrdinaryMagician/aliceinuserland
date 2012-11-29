@@ -18,34 +18,14 @@
 
 bool noblock = false;
 
-int stdinspew( int blocksize )
-{
-	int retrn = 0;
-	char block[blocksize];
-	do
-	{
-		retrn = read(STDIN_FILENO,block,blocksize);
-		if ( retrn > 0 )
-			write(STDOUT_FILENO,block,retrn);
-		if ( retrn == -1 )
-		{
-			fprintf(stderr,"cat: stdin: %s\n",strerror(errno));
-			return 1;
-		}
-	}
-	while ( retrn > 0 );
-	return 0;
-}
-
 int spew( const char *fname, int blocksize )
 {
-	if ( strcmp(fname,"-") == 0 )
-		return stdinspew(blocksize);
-
 	int filedes = 0;
 	int retrn = 0;
 	char block[blocksize];
-	if ( (filedes = open(fname,O_RDONLY)) == -1 )
+	if ( strcmp(fname,"-") == 0 )
+		filedes = STDIN_FILENO;
+	else if ( (filedes = open(fname,O_RDONLY)) == -1 )
 	{
 		fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
 		return 1;
@@ -62,7 +42,8 @@ int spew( const char *fname, int blocksize )
 		}
 	}
 	while ( retrn > 0 );
-	close(filedes);
+	if ( filedes != STDIN_FILENO )
+		close(filedes);
 	return 0;
 }
 
