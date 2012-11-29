@@ -55,7 +55,7 @@ int main( int argc, char **argv )
 	if ( argc <= 1 )
 		return spew("-",blksize);
 	int i = 0;
-	if ( (strcmp(argv[i],"-u") == 0) )
+	if ( strcmp(argv[i],"-u") == 0 )
 	{
 		noblock = true;
 		i++;
