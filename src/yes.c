@@ -6,7 +6,7 @@
 */
 #include <stdio.h>
 
-int main (int argc, char **argv)
+int main( int argc, char **argv )
 {
 	int i;
 	if ( argc <= 1 )
@@ -15,8 +15,8 @@ int main (int argc, char **argv)
 			printf("y\n");
 		return 0;
 	}
-	while(1)
-		for(i=1;i<argc;i++)
+	while( 1 )
+		for( i=1; i<argc; i++ )
 			(i < (argc-1)) ? printf("%s ",argv[i]) : printf("%s\n",argv[i]);
 	return 0;
 }

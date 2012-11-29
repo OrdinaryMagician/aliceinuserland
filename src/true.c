@@ -4,7 +4,7 @@
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
-int main(void)
+int main( void )
 {
 	return 0;
 }

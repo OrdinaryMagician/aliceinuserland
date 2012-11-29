@@ -13,7 +13,7 @@
 /*
    check if a character is inside the specified set
 */
-extern bool isin(const char c, const char *set)
+extern bool isin( const char c, const char *set )
 {
 	int i = 0;
 	while ( set[i] != '\0' )
@@ -28,23 +28,23 @@ extern bool isin(const char c, const char *set)
 /*
    something like write(1,s,len) but with stdio functions
 */
-extern void nprints(const char *s, const int len)
+extern void nprints( const char *s, const int len )
 {
 	int i;
-	for ( i = 0; i<len; i++ )
+	for ( i=0; i<len; i++ )
 		putchar(s[i]);
 }
 
 /*
    try to interpret a character as an hexadecimal digit
 */
-extern int ctoh(const unsigned char c)
+extern int ctoh( const unsigned char c )
 {
-	if ( c >= '0' && c <= '9' )
+	if ( (c >= '0') && (c <= '9') )
 		return c - '0';
-	else if ( c >= 'a' && c <= 'f' )
+	else if ( (c >= 'a') && (c <= 'f') )
 		return (c  - 'a') + 10;
-	else if ( c >= 'A' && c <= 'F' )
+	else if ( (c >= 'A') && (c <= 'F') )
 		return (c  - 'A') + 10;
 	return 0;
 }
@@ -52,7 +52,7 @@ extern int ctoh(const unsigned char c)
 /*
    print the UTF-8 char sequence corresponding to a specific unicode value
 */
-extern void pututf8(unsigned long int unichar)
+extern void pututf8( unsigned long int unichar )
 {
 	if ( unichar <= 0x7f )
 		putchar(unichar%0x80);
@@ -96,7 +96,7 @@ extern void pututf8(unsigned long int unichar)
 /*
    create a string from an unicode character value and return a pointer to it
 */
-extern char* toutf8(unsigned long int unichar)
+extern char* toutf8( unsigned long int unichar )
 {
 	char *retstr = NULL;
 	if ( unichar <= 0x7f )
@@ -159,7 +159,7 @@ extern char* toutf8(unsigned long int unichar)
    characters that should be skipped in input.
    special cases: return -1 if a "\c" was found or 0 if it's a null character
 */
-extern int descape(const char *str)
+extern int descape( const char *str )
 {
 	int i = 0, nc = 0;
 	unsigned char trch = 0;

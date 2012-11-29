@@ -9,13 +9,13 @@
 #include <signal.h>
 #include <sys/time.h>
 
-void endwait ()
+void endwait()
 {
 	signal(SIGALRM,endwait);
 	exit(0);
 }
 
-int main (int argc, char **argv)
+int main( int argc, char **argv )
 {
 	long sleepsecs = 0;
 	long sleepmicr = 0;
@@ -29,7 +29,7 @@ int main (int argc, char **argv)
 	waiter.it_interval.tv_usec = 0;
 	waiter.it_value.tv_sec = sleepsecs;
 	waiter.it_value.tv_usec = sleepmicr;
-	setitimer(ITIMER_REAL, &waiter, 0);
+	setitimer(ITIMER_REAL,&waiter,0);
 	signal(SIGALRM,endwait);
 	pause();
 	return 0;

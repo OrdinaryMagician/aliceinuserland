@@ -74,7 +74,7 @@ int main( int argc, char **argv )
 	if ( argc <= 1 )
 		return spew("-",blksize);
 	int i = 0;
-	for ( i=1;i<argc;i++ )
+	for ( i=1; i<argc; i++ )
 	{
 		if ( (i==1) && (strcmp(argv[i],"-u") == 0) )
 		{
@@ -83,7 +83,7 @@ int main( int argc, char **argv )
 				return spew("-",1);
 			continue;
 		}
-		if ( spew(argv[i], (noblock ? 1 : blksize)) )
+		if ( spew(argv[i],( noblock ? 1 : blksize )) )
 			return 1;
 	}
 	return 0;

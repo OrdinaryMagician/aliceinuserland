@@ -17,13 +17,13 @@ unsigned char options = 0;
    get options, return whether or not this argument should be
    skipped when printing (i.e.: if it's not recognized as an option)
 */
-bool getopts(const char *arg)
+bool getopts( const char *arg )
 {
 	int i = 0;
 	bool skipme = true;
 	while ( arg[i] != 0 )
 	{
-		switch (arg[i] )
+		switch ( arg[i] )
 		{
 		case 'e':
 			options = options|OPT_ESC;
@@ -43,7 +43,7 @@ bool getopts(const char *arg)
 	return skipme;
 }
 
-int main (int argc, char **argv)
+int main( int argc, char **argv )
 {
 	int i = 0, j = 0, sch = 0;
 	i = 1;
@@ -59,7 +59,7 @@ int main (int argc, char **argv)
 		if ( !(options&OPT_ESC) )
 		{
 			fputs(argv[i],stdout);
-			((i+1) == argc) ? (options&OPT_NONL ?  : putchar('\n')) : putchar(' ');
+			( (i+1) == argc ) ? ( options&OPT_NONL ? : putchar('\n') ) : putchar(' ');
 			i++;
 			continue;
 		}
