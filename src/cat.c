@@ -12,9 +12,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#ifndef BLOCKSIZE
 #define BLOCKSIZE 131072
-#endif
 
 bool noblock = false;
 
@@ -62,8 +60,11 @@ int spew( const char *fname, int blocksize )
 
 int main( int argc, char **argv )
 {
+	int blksize = 0;
+	char *gotblk = getenv("AUIO_BLKSIZE");
+	blksize = ( (gotblk != NULL) && (atoi(gotblk) > 0) ) ? atoi(gotblk) : BLOCKSIZE;
 	if ( argc <= 1 )
-		return spew("-", BLOCKSIZE);
+		return spew("-", blksize);
 	int i = 0;
 	for ( i=1;i<argc;i++ )
 	{
@@ -74,7 +75,7 @@ int main( int argc, char **argv )
 				return spew("-", 1);
 			continue;
 		}
-		if ( spew(argv[i], (noblock ? 1 : BLOCKSIZE)) )
+		if ( spew(argv[i], (noblock ? 1 : blksize)) )
 				return 1;
 	}
 	return 0;
