@@ -5,18 +5,30 @@
 	Released under the MIT License.
 */
 #include <stdio.h>
+#include <string.h>
 
 int main( int argc, char **argv )
 {
 	int i;
+	int strsiz;
 	if ( argc <= 1 )
 	{
 		while(1)
-			printf("y\n");
+			puts("y");
 		return 0;
 	}
+	strsiz = 0;
+	for( i=1; i<argc; i++ )
+		strsiz += strlen(argv[i]+1);
+	char joinstr[strsiz];
+	strcpy(joinstr,"");
+	for( i=1; i<argc; i++ )
+	{
+		strcat(joinstr,argv[i]);
+		if ( i < (argc-1) )
+			strcat(joinstr," ");
+	}
 	while( 1 )
-		for( i=1; i<argc; i++ )
-			(i < (argc-1)) ? printf("%s ",argv[i]) : printf("%s\n",argv[i]);
+		puts(joinstr);
 	return 0;
 }
