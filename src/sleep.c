@@ -4,6 +4,9 @@
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
+
+#define _XOPEN_SOURCE	// won't build with musl unless I set this
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>

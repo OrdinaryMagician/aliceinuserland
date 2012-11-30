@@ -40,7 +40,7 @@ The reference used is POSIX.1-2008 (IEEE Std 1003.1-2008)
 
 I generally check if Au can be built using Clang. I really love this compiler. It's much more comfortable and helpful than GCC, it also produces smaller binaries.
 
-Due to laziness I haven't checked if I can use non-GNU C libraries (I really want to).
+Au has been tested to build and run flawlessly with the musl C library (both dynamically and statically linked). Some minor tweaks are needed every once in a while.
 
 ## Additions
 
