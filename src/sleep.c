@@ -5,7 +5,7 @@
 	Released under the MIT License.
 */
 
-#define _XOPEN_SOURCE	// won't build with musl unless I set this
+#define _BSD_SOURCE	// won't build with musl unless I set this
 
 #include <stdlib.h>
 #include <unistd.h>

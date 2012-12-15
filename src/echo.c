@@ -28,9 +28,6 @@ bool getopts( const char *arg )
 		case 'e':
 			options = options|OPT_ESC;
 			break;
-		case 'E':
-			options = options&(~OPT_ESC);
-			break;
 		case 'n':
 			options = options|OPT_NONL;
 			break;
@@ -49,7 +46,7 @@ int main( int argc, char **argv )
 	i = 1;
 	while ( i < argc )
 	{
-		if ( (argv[i][0] == '-') && isin(argv[i][1],"eEn") && getopts(argv[i]+1) )
+		if ( (argv[i][0] == '-') && isin(argv[i][1],"en") && getopts(argv[i]+1) )
 			i++;
 		break;
 	}

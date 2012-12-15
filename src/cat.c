@@ -16,16 +16,12 @@
 #define BLOCKSIZE 131072
 #endif
 
-bool noblock = false;
-
 int spew( const char *fname, int blocksize )
 {
 	int filedes = 0;
 	int retrn = 0;
 	char block[blocksize];
-	if ( strcmp(fname,"-") == 0 )
-		filedes = STDIN_FILENO;
-	else if ( (filedes = open(fname,O_RDONLY)) == -1 )
+	if ( (filedes = open(fname,O_RDONLY)) == -1 )
 	{
 		fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
 		return 1;
@@ -42,8 +38,7 @@ int spew( const char *fname, int blocksize )
 		}
 	}
 	while ( retrn > 0 );
-	if ( filedes != STDIN_FILENO )
-		close(filedes);
+	close(filedes);
 	return 0;
 }
 
@@ -53,18 +48,11 @@ int main( int argc, char **argv )
 	char *gotblk = getenv("AUIO_BLKSIZE");
 	blksize = ( (gotblk != NULL) && (atoi(gotblk) > 0) ) ? atoi(gotblk) : BLOCKSIZE;
 	if ( argc <= 1 )
-		return spew("-",blksize);
+		return spew("/dev/stdin",blksize);
 	int i = 1;
-	if ( strcmp(argv[i],"-u") == 0 )
-	{
-		noblock = true;
-		i++;
-	}
-	if ( argc == i )
-		return spew("-",1);
 	while ( i < argc )
 	{
-		if ( spew(argv[i],( noblock ? 1 : blksize )) )
+		if ( spew(argv[i],blksize) )
 			return 1;
 		i++;
 	}

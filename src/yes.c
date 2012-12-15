@@ -13,7 +13,7 @@ int main( int argc, char **argv )
 	int strsiz;
 	if ( argc <= 1 )
 	{
-		while(1)
+		for(;;)
 			puts("y");
 		return 0;
 	}
@@ -28,7 +28,7 @@ int main( int argc, char **argv )
 		if ( i < (argc-1) )
 			strcat(joinstr," ");
 	}
-	while( 1 )
+	for(;;)
 		puts(joinstr);
 	return 0;
 }
