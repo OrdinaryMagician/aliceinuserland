@@ -59,7 +59,7 @@ int main( int argc, char **argv )
 		if ( !(options&OPT_ESC) )
 		{
 			fputs(argv[i],stdout);
-			( (i+1) == argc ) ? ( options&OPT_NONL ? : putchar('\n') ) : putchar(' ');
+			( (i+1) == argc ) ? ( (options&OPT_NONL) ? putchar('\0') : putchar('\n')) : putchar(' ');
 			i++;
 			continue;
 		}
