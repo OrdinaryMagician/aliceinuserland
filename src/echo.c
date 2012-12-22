@@ -51,7 +51,7 @@ int main( int argc, char **argv )
 		break;
 	}
 	bool skip = false;
-	while ( (i < argc) && !skip )
+	while ( i < argc )
 	{
 		if ( !(options&OPT_ESC) )
 		{
