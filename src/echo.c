@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include "helpers.h"
+#include <helpers.h>
 #define OPT_ESC 1
 #define OPT_NONL 2
 
@@ -61,6 +61,7 @@ int main( int argc, char **argv )
 			continue;
 		}
 		j = 0;
+		skip = false;
 		while ( !skip )
 		{
 			sch = descape(argv[i]+j);
