@@ -6,9 +6,9 @@
 */
 #include <stdio.h>
 
-int main( int argc, char **argv )
+int main( int argc, char **argv, char **envp )
 {
-	for ( argv += argc+1; *argv; argv++ )
-		printf("%s\n",*argv);
+	while ( *envp )
+		printf("%s\n",*(envp++));
 	return 0;
 }
