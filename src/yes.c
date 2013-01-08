@@ -6,6 +6,7 @@
 */
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 int main( int argc, char **argv )
 {
@@ -13,8 +14,8 @@ int main( int argc, char **argv )
 	int strsiz;
 	if ( argc <= 1 )
 	{
-		for(;;)
-			puts("y");
+		while( puts("y") > 0 );
+		fprintf(stderr,"yes: stdout: %s\n",strerror(errno));
 		return 0;
 	}
 	strsiz = 0;
@@ -28,7 +29,7 @@ int main( int argc, char **argv )
 		if ( i < (argc-1) )
 			strcat(joinstr," ");
 	}
-	for(;;)
-		puts(joinstr);
+	while( puts(joinstr) > 0 );
+	fprintf(stderr,"yes: stdout: %s\n",strerror(errno));
 	return 0;
 }

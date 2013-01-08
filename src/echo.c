@@ -6,6 +6,7 @@
 */
 #include <stdio.h>
 #include <stdbool.h>
+#include <errno.h>
 #include <string.h>
 #include <helpers.h>
 #define OPT_ESC 1

@@ -29,11 +29,17 @@ int spew( const char *fname, int blocksize )
 	do
 	{
 		retrn = read(filedes,block,blocksize);
-		if ( retrn > 0 )
-			write(STDOUT_FILENO,block,retrn);
 		if ( retrn == -1 )
 		{
 			fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
+			return 1;
+		}
+		if ( retrn == 0 )
+			continue;
+		retrn = write(STDOUT_FILENO,block,retrn);
+		if ( retrn == -1 )
+		{
+			fprintf(stderr,"cat: stdout: %s\n",strerror(errno));
 			return 1;
 		}
 	}
