@@ -1,6 +1,6 @@
 /*
 	yes.c : automated y/n handler for lazy people.
-	(C)2012 Marisa Kirisame, UnSX Team.
+	(C)2012-2013 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */

@@ -1,7 +1,13 @@
 -- written
 
+basename: prints the filename of something without its path
+          for some reason even of things that don't exist
+          it might be useful for something maybe
 cat: concatenate files
      no options, those are unnecessary
+dirname: prints the directory something is on
+         a bit confused about its usage or why it works the way it does
+         but I guess people use it, right?
 echo: print stuff to screen
       accepted options are
        -e: resolve backslash escapes
@@ -22,7 +28,6 @@ yes: spam something until stdout can't be written to
 
 [
 base64
-basename
 chmod
 chown
 chroot
@@ -33,7 +38,6 @@ cut
 date
 dd
 df
-dirname
 du
 env
 expand

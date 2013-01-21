@@ -1,7 +1,7 @@
 CFLAGS := -std=c99 -Wall -Wextra -pedantic -O2 -pipe -Wno-unused-function -Wno-unused-parameter -Isrc/
 PREFIX ?= /usr/local
 .PHONY : clean install
-UTILS := echo true false sleep cat yes printenv
+UTILS := echo true false sleep cat yes printenv basename dirname
 SOURCES := $(patsubst %.c,%.o,$(wildcard src/*.c))
 all: $(SOURCES) $(UTILS)
 .c.o:
@@ -20,6 +20,10 @@ yes:
 	$(CC) $(CFLAGS) src/yes.o -o bin/yes
 printenv:
 	$(CC) $(CFLAGS) src/printenv.o -o bin/printenv
+basename:
+	$(CC) $(CFLAGS) src/basename.o -o bin/basename
+dirname:
+	$(CC) $(CFLAGS) src/dirname.o -o bin/dirname
 clean:
 	rm -f bin/*
 	rm -f src/*.o
