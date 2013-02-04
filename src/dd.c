@@ -1,3 +1,24 @@
+/*
+ 	Copyright (c) 2013 Peter Sherman
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+ */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -44,13 +65,17 @@ int main(int argc, char *argv[])
 	}
 	excess = ftell(f_input) % bufsize;
 	status = fwrite(buffer, excess, 1, f_output);
+	
+	fclose(f_input);
+	fclose(f_output);
+	free(buffer);
+	return 0;
 }
 
-FILE *attempt_open(char *path, char *mode) //just opens it/does error checking
+FILE *attempt_open(char *path, char *mode) //just opens it and does error checking
 {
 	FILE *target = fopen(path, mode); 
-	if(!target)
-	{
+	if(!target) {
 		fprintf(stderr, "Error opening %s: %s\n", path, strerror(errno));
 		return NULL;
 	}
@@ -61,27 +86,31 @@ int handle_opts(int argc, char *argv[]) //option processing - sets flags, attemp
 {
 	char *in_path = 0, *out_path = 0;
 	int i;
-	for(i = 1; i < argc; i++)
-	{
+	for(i = 1; i < argc; i++) {
 
-		if(*argv[i] != '-'){
+		if(*argv[i] != '-') {
 			fprintf(stderr, "Unrecognized option: %s \n", argv[i]);
 			return -1;
 		}
 
-		if(!strcmp(argv[i], "-i")){
+		if(!strcmp(argv[i], "-i")) {
 			in_path = argv[++i];
 			continue;
 		}
 		
-		if(!strcmp(argv[i], "-o")){
+		if(!strcmp(argv[i], "-o")) {
 			out_path = argv[++i];
 			continue;
 		}
 		
-		if(!strcmp(argv[i], "-bs")){
+		if(!strcmp(argv[i], "-bs")) {
 			bufsize = atoi(argv[++i]);
 			continue;
+		}
+
+		else {
+			fprintf(stderr, "Unrecognized option: %s \n", argv[i]);
+			return -1;
 		}
 
 	}
