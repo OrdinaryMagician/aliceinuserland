@@ -22,6 +22,8 @@ int head( unsigned int nl, char *fname )
 	do
 	{
 		ch = fgetc(tf);
+		if ( ch == EOF )
+			break;
 		if ( ferror(tf) )
 		{
 			fprintf(stderr,"head: %s: %s\n",fname,strerror(errno));
