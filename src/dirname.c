@@ -19,16 +19,9 @@ int main( int argc, char **argv )
 		argv[1]++;
 	}
 	if ( *find != '/' )
-	{
-		printf(".\n");
-		return 0;
-	}
+		return printf(".\n")&0;
 	if ( find == dir )
-	{
-		printf("/\n");
-		return 0;
-	}
+		return printf("/\n")&0;
 	*find = 0;
-	printf("%s\n",dir);
-	return 0;
+	return printf("%s\n",dir)&0;
 }

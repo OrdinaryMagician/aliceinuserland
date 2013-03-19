@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <helpers.h>
 
 #ifndef BLOCKSIZE
 #define BLOCKSIZE 131072
@@ -22,25 +23,22 @@ int spew( const char *fname, int blocksize )
 	int retrn = 0;
 	char block[blocksize];
 	if ( (filedes = open(fname,O_RDONLY)) == -1 )
-	{
-		fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
-		return 1;
-	}
+		return bail("cat: %s: %s\n",fname,strerror(errno));
 	do
 	{
 		retrn = read(filedes,block,blocksize);
 		if ( retrn == -1 )
 		{
-			fprintf(stderr,"cat: %s: %s\n",fname,strerror(errno));
-			return 1;
+			close(filedes);
+			return bail("cat: %s: %s\n",fname,strerror(errno));
 		}
-		if ( retrn == 0 )
+		if ( !retrn )
 			continue;
 		retrn = write(STDOUT_FILENO,block,retrn);
 		if ( retrn == -1 )
 		{
-			fprintf(stderr,"cat: stdout: %s\n",strerror(errno));
-			return 1;
+			close(filedes);
+			return bail("cat: %s: %s\n",fname,strerror(errno));
 		}
 	}
 	while ( retrn > 0 );
@@ -52,15 +50,12 @@ int main( int argc, char **argv )
 {
 	int blksize = 0;
 	char *gotblk = getenv("AUIO_BLKSIZE");
-	blksize = ( (gotblk != NULL) && (atoi(gotblk) > 0) ) ? atoi(gotblk) : BLOCKSIZE;
+	blksize = ((gotblk!=NULL)&&(atoi(gotblk)>0))?atoi(gotblk):BLOCKSIZE;
 	if ( argc <= 1 )
 		return spew("/dev/stdin",blksize);
 	int i = 1;
 	while ( i < argc )
-	{
-		if ( spew(argv[i],blksize) )
+		if ( spew(argv[i++],blksize) )
 			return 1;
-		i++;
-	}
 	return 0;
 }

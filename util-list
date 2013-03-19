@@ -14,6 +14,8 @@ echo: print stuff to screen
        -n: don't terminate with a newline
 false: return false
        why the hell does GNU think it should even need option handling?
+head: show the first n (10 by default) lines of a file
+      no more, no less
 printenv: prints current environment variables
           it isn't that hard
 sleep: wait for some seconds

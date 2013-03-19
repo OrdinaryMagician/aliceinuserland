@@ -1,4 +1,5 @@
-CFLAGS := -std=c99 -Wall -Wextra -pedantic -O2 -pipe -Wno-unused-function -Wno-unused-parameter -Isrc/
+CFLAGS := -std=c99 -Wall -Wextra -Werror -pedantic -O2 -pipe \
+	  -Wno-unused-function -Wno-unused-parameter -Wno-empty-body -Isrc/
 PREFIX ?= /usr/local
 .PHONY : clean install
 UTILS := echo true false sleep cat yes printenv basename dirname head
@@ -15,9 +16,9 @@ false:
 sleep:
 	$(CC) $(CFLAGS) src/sleep.o -o bin/sleep
 cat:
-	$(CC) $(CFLAGS) src/cat.o -o bin/cat
+	$(CC) $(CFLAGS) src/helpers.o src/cat.o -o bin/cat
 yes:
-	$(CC) $(CFLAGS) src/yes.o -o bin/yes
+	$(CC) $(CFLAGS) src/helpers.o src/yes.o -o bin/yes
 printenv:
 	$(CC) $(CFLAGS) src/printenv.o -o bin/printenv
 basename:
@@ -25,7 +26,7 @@ basename:
 dirname:
 	$(CC) $(CFLAGS) src/dirname.o -o bin/dirname
 head:
-	$(CC) $(CFLAGS) src/head.o -o bin/head
+	$(CC) $(CFLAGS) src/helpers.o src/head.o -o bin/head
 clean:
 	rm -f bin/*
 	rm -f src/*.o

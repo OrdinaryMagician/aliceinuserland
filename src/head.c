@@ -9,15 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <helpers.h>
 
 int head( unsigned int nl, char *fname )
 {
 	FILE *tf; 
 	if ( (tf = fopen(fname,"r")) == NULL )
-	{
-		fprintf(stderr,"head: %s: %s\n",fname,strerror(errno));
-		return 1;
-	}
+		return bail("head: %s: %s\n",fname,strerror(errno));
 	int ch;
 	do
 	{
@@ -26,17 +24,15 @@ int head( unsigned int nl, char *fname )
 			break;
 		if ( ferror(tf) )
 		{
-			fprintf(stderr,"head: %s: %s\n",fname,strerror(errno));
 			fclose(tf);
-			return 1;
+			return bail("head: %s: %s\n",fname,strerror(errno));
 		}
 		if ( ch == '\n' )
 			nl--;
 		if ( putchar(ch) == EOF )
 		{
-			fprintf(stderr,"head: stdout: %s\n",strerror(errno));
 			fclose(tf);
-			return 0;
+			return bail("head: %s: %s\n",fname,strerror(errno));
 		}
 	}
 	while ( (ch != EOF) && (nl > 0) );

@@ -9,16 +9,16 @@
 #include <errno.h>
 #include <string.h>
 #include <helpers.h>
-#define OPT_ESC 1
-#define OPT_NONL 2
+#define O_ESC 1
+#define O_NONL 2
 
-unsigned char options = 0;
+unsigned char opt = 0;
 
 /*
    get options, return whether or not this argument should be
    skipped when printing (i.e.: if it's not recognized as an option)
 */
-bool getopts( const char *arg )
+bool getopt( const char *arg )
 {
 	int i = 0;
 	bool skipme = true;
@@ -27,10 +27,10 @@ bool getopts( const char *arg )
 		switch ( arg[i] )
 		{
 		case 'e':
-			options = options|OPT_ESC;
+			opt = opt|O_ESC;
 			break;
 		case 'n':
-			options = options|OPT_NONL;
+			opt = opt|O_NONL;
 			break;
 		default:
 			skipme = false;
@@ -47,17 +47,18 @@ int main( int argc, char **argv )
 	i = 1;
 	while ( i < argc )
 	{
-		if ( (argv[i][0] == '-') && isin(argv[i][1],"en") && getopts(argv[i]+1) )
+		if ( (argv[i][0] == '-') && isin(argv[i][1],"en")
+			&& getopt(argv[i]+1) )
 			i++;
 		break;
 	}
 	bool skip = false;
 	while ( i < argc )
 	{
-		if ( !(options&OPT_ESC) )
+		if ( !(opt&O_ESC) )
 		{
 			fputs(argv[i],stdout);
-			( (i+1) == argc ) ? ( (options&OPT_NONL) ? putchar('\0') : putchar('\n')) : putchar(' ');
+			putchar(((i+1)==argc)?((opt&O_NONL)?'\0':'\n'):' ');
 			i++;
 			continue;
 		}
@@ -72,10 +73,7 @@ int main( int argc, char **argv )
 			if ( sch == 0 )
 				skip = true;
 		}
-		if ( i < (argc-1) )
-			putchar(' ');
-		else
-			putchar('\n');
+		putchar((i<(argc-1))?' ':'\n');
 		i++;
 	}
 	return 0;

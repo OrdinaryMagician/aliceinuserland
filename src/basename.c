@@ -18,6 +18,5 @@ int main( int argc, char **argv )
 		base = memb;
 		memb = strtok(NULL,"/");
 	}
-	printf("%s\n",base);
-	return 0;
+	return printf("%s\n",base)&0;
 }

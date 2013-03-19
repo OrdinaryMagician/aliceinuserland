@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <helpers.h>
 
 int main( int argc, char **argv )
 {
@@ -15,21 +16,21 @@ int main( int argc, char **argv )
 	if ( argc <= 1 )
 	{
 		while( puts("y") > 0 );
-		fprintf(stderr,"yes: stdout: %s\n",strerror(errno));
-		return 0;
+		return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 	}
 	strsiz = 0;
-	for( i=1; i<argc; i++ )
-		strsiz += strlen(argv[i]+1);
+	i = 0;
+	while( i < argc )
+		strsiz += strlen(argv[i++]+1);
 	char joinstr[strsiz];
 	strcpy(joinstr,"");
-	for( i=1; i<argc; i++ )
+	i = 0;
+	while ( i < argc )
 	{
-		strcat(joinstr,argv[i]);
-		if ( i < (argc-1) )
+		strcat(joinstr,argv[i++]);
+		if ( i < argc )
 			strcat(joinstr," ");
 	}
 	while( puts(joinstr) > 0 );
-	fprintf(stderr,"yes: stdout: %s\n",strerror(errno));
-	return 0;
+		return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 }
