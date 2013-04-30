@@ -12,28 +12,20 @@
 #include <signal.h>
 #include <sys/time.h>
 
-void endwait()
+void endwait( int unused )
 {
-	signal(SIGALRM,endwait);
 	exit(0);
 }
 
 int main( int argc, char **argv )
 {
-	long sleepsecs = 0;
-	long sleepmicr = 0;
-	if ( argc > 1 )
-	{
-		sleepsecs = atol(argv[1]);
-		sleepmicr = (atof(argv[1])-sleepsecs)*1000000;
-	}
+	long sleepsecs = (argc>1)?atol(argv[1]):1;
+	long sleepmicr = (argc>1)?((atof(argv[1])-sleepsecs)*1000000):0;
 	struct itimerval waiter;
-	waiter.it_interval.tv_sec = 0;
-	waiter.it_interval.tv_usec = 0;
 	waiter.it_value.tv_sec = sleepsecs;
 	waiter.it_value.tv_usec = sleepmicr;
 	setitimer(ITIMER_REAL,&waiter,0);
 	signal(SIGALRM,endwait);
 	pause();
-	return 0;
+	return 1;
 }

@@ -1,5 +1,5 @@
 /*
-	dirname.c : print the path of the directory something is on
+	dirname.c : print the path of the directory something is on.
 	(C)2012-2013-2013 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.

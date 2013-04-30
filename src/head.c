@@ -11,16 +11,15 @@
 #include <errno.h>
 #include <helpers.h>
 
-int head( unsigned int nl, char *fname )
+int head( int nl, char *fname )
 {
-	FILE *tf; 
+	FILE *tf = NULL;
 	if ( (tf = fopen(fname,"r")) == NULL )
 		return bail("head: %s: %s\n",fname,strerror(errno));
-	int ch;
-	do
+	int ch = 0;
+	while ( (ch != EOF) && (nl > 0) )
 	{
-		ch = fgetc(tf);
-		if ( ch == EOF )
+		if ( (ch = fgetc(tf)) == EOF )
 			break;
 		if ( ferror(tf) )
 		{
@@ -35,7 +34,6 @@ int head( unsigned int nl, char *fname )
 			return bail("head: %s: %s\n",fname,strerror(errno));
 		}
 	}
-	while ( (ch != EOF) && (nl > 0) );
 	fclose(tf);
 	return 0;
 }
@@ -43,11 +41,17 @@ int head( unsigned int nl, char *fname )
 int main( int argc, char **argv )
 {
 	int skip = 1;
-	unsigned int nl = 10;
-	if ( (argc > 2) && !strcmp(argv[1],"-n") )
+	int nl = 10;
+	if ( argc > 1 )
 	{
-		nl = atoi(argv[2]);
-		skip += 2;
+		if ( !strcmp(argv[1],"--") )
+			skip+=1;
+		if ( !strcmp(argv[1],"-n") )
+		{
+			/* silly safeguard in case number isn't specified */
+			nl = (argc>2)?atoi(argv[2]):nl;
+			skip+=2;
+		}
 	}
 	return head(nl,(argc>skip)?argv[skip]:"/dev/stdin");
 }

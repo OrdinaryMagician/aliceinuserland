@@ -13,6 +13,7 @@
 #define O_NONL 2
 
 unsigned char opt = 0;
+bool stopargs = false;
 
 /*
    get options, return whether or not this argument should be
@@ -32,6 +33,9 @@ bool getopt( const char *arg )
 		case 'n':
 			opt = opt|O_NONL;
 			break;
+		case '-':
+			stopargs = true;
+			break;
 		default:
 			skipme = false;
 			break;
@@ -47,10 +51,11 @@ int main( int argc, char **argv )
 	i = 1;
 	while ( i < argc )
 	{
-		if ( (argv[i][0] == '-') && isin(argv[i][1],"en")
+		if ( (argv[i][0] == '-') && isin(argv[i][1],"en-")
 			&& getopt(argv[i]+1) )
 			i++;
-		break;
+		if ( stopargs )
+			break;
 	}
 	bool skip = false;
 	while ( i < argc )

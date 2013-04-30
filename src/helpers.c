@@ -4,10 +4,8 @@
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -22,13 +20,13 @@ int bail( const char *fmt, ... )
 }
 
 /* check if a character is inside the specified set */
-bool isin( const char c, const char *set )
+int isin( const char c, const char *set )
 {
 	int i = -1;
 	while ( set[++i] != '\0' )
 		if ( c == set[i] )
-			return true;
-	return false;
+			return 1;
+	return 0;
 }
 
 /* something like write(1,s,len) but with stdio functions */

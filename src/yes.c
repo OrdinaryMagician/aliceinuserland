@@ -5,6 +5,7 @@
 	Released under the MIT License.
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <helpers.h>
@@ -19,17 +20,18 @@ int main( int argc, char **argv )
 		return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 	}
 	strsiz = 0;
-	i = 0;
+	i = 1;
 	while( i < argc )
-		strsiz += strlen(argv[i++]+1);
-	char joinstr[strsiz];
+		strsiz += strlen(argv[i++])+1;
+	char *joinstr = NULL;
+	if ( (joinstr = malloc(strsiz)) == NULL )
+		return bail("yes: %s\n",strerror(errno));
 	strcpy(joinstr,"");
-	i = 0;
+	i = 1;
 	while ( i < argc )
 	{
 		strcat(joinstr,argv[i++]);
-		if ( i < argc )
-			strcat(joinstr," ");
+		strcat(joinstr," "+(i>=argc));
 	}
 	while( puts(joinstr) > 0 );
 		return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;

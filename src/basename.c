@@ -1,5 +1,5 @@
 /*
-	basename.c : print the actual filename of something without its path
+	basename.c : print the actual filename of something without its path.
 	(C)2012-2013-2013 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
