@@ -16,11 +16,13 @@ false: return false
        why the hell does GNU think it should even need option handling?
 head: show the first n (10 by default) lines of a file
       no more, no less
+logname: get username we logged in as
 printenv: prints current environment variables
           it isn't that hard
 sleep: wait for some seconds
        handling of special units is stupid, also if you need to wait for
        such long times why not use at or a cron job?
+sync: flush cached filesystem blocks to disk
 true: return true
       seriously, who in their right mind would add argument handling to these?
 yes: spam something until stdout can't be written to
@@ -50,7 +52,6 @@ id
 join
 link
 ln
-logname
 ls
 mkdir
 mkfifo
@@ -71,7 +72,6 @@ sort
 split
 stat
 stty
-sync
 tail
 tee
 test
