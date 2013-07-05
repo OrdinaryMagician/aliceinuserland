@@ -1,0 +1,54 @@
+#!/bin/zsh
+CFLAGS="-march=native -std=c99 -Os -pipe -Wall -Wextra -Werror -pedantic"
+UTILS=( echo true false sleep cat yes printenv basename dirname head sync \
+	logname )
+ADDON="src/helpers.o"
+NEEDADDON=( 1 0 0 0 1 1 0 0 0 1 0 0 )
+SOURCES=( src/*.c )
+CC=${CC:-clang}
+case $1 in
+ veryclean)
+  for f in ${UTILS}
+   do
+    if [[ -e bin/${f} ]]
+     then
+      echo -e "\e[1;32m[RM]\e[0m ${f}"
+      rm bin/${f}
+    fi
+   done
+  $0 clean
+  ;;
+ clean)
+  for f in ${SOURCES}
+   do
+    f2=${f/%.c/.o}
+    if [[ -e "${f2}" ]]
+     then
+      echo -e "\e[1;32m[RM]\e[0m $(basename ${f2})"
+      rm ${f2}
+    fi
+   done
+  ;;
+ *)
+   for f in ${SOURCES}
+    do
+     f2=${f/%.c/.o}
+     echo -e "\e[1;32m[OBJ]\e[0m $(basename ${f}) -> $(basename ${f2})"
+     $CC ${=CFLAGS} -c -o ${f2} ${f}
+    done
+   i=0
+   for b in ${UTILS}
+    do
+     i=$(($i + 1))
+     echo -e "\e[1;32m[BIN]\e[0m ${b}"
+     if [ "${NEEDADDON[i]}" -ne 0 ]
+      then
+       $CC -o bin/${b} ${ADDON} src/${b}.o
+      else
+       $CC -o bin/${b} src/${b}.o
+     fi
+     strip -s bin/${b}
+    done
+  ;;
+esac
+exit 0

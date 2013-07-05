@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <helpers.h>
+#include "helpers.h"
 
 int main( int argc, char **argv )
 {
@@ -31,8 +31,8 @@ int main( int argc, char **argv )
 	while ( i < argc )
 	{
 		strcat(joinstr,argv[i++]);
-		strcat(joinstr," "+(i>=argc));
+		strcat(joinstr,&" "[i>=argc]);
 	}
 	while( puts(joinstr) > 0 );
-		return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
+	return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 }

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <helpers.h>
+#include "helpers.h"
 
 int head( int nl, char *fname )
 {
