@@ -12,5 +12,10 @@ int main( int argc, char **argv )
 	if ( argc <= 1 )
 		return 1;
 	char *base = strrchr(argv[1],'/');
+	while ( !base[1] )
+	{
+		base[0] = 0;
+		base = strrchr(argv[1],'/');
+	}
 	return printf("%s\n",base?(base+1):argv[1])&0;
 }
