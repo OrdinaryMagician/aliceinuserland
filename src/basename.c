@@ -11,12 +11,6 @@ int main( int argc, char **argv )
 {
 	if ( argc <= 1 )
 		return 1;
-	char *base = argv[1];
-	char *memb = strtok(argv[1],"/");
-	while ( memb )
-	{
-		base = memb;
-		memb = strtok(NULL,"/");
-	}
-	return printf("%s\n",base)&0;
+	char *base = strrchr(argv[1],'/');
+	return printf("%s\n",base?(base+1):argv[1])&0;
 }
