@@ -16,7 +16,7 @@ int main( int argc, char **argv )
 	int strsiz;
 	if ( argc <= 1 )
 	{
-		while( puts("y") > 0 );
+		while( puts("y") >= 0 );
 		return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 	}
 	strsiz = 0;
@@ -33,6 +33,6 @@ int main( int argc, char **argv )
 		strcat(joinstr,argv[i++]);
 		strcat(joinstr,&" "[i>=argc]);
 	}
-	while( puts(joinstr) > 0 );
+	while( puts(joinstr) >= 0 );
 	return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 }
