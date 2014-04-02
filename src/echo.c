@@ -16,7 +16,7 @@ char stopargs = 0;
    get options, return whether or not this argument should be
    skipped when printing (i.e.: if it's not recognized as an option)
 */
-char getopt( const char *arg )
+char getopts( const char *arg )
 {
 	int i = 0;
 	char skipme = 1;
@@ -48,7 +48,7 @@ int main( int argc, char **argv )
 	while ( i < argc )
 	{
 		if ( (argv[i][0] == '-') && isin(argv[i][1],"en-")
-			&& getopt(argv[i]+1) ) i++;
+			&& getopts(argv[i]+1) ) i++;
 		if ( stopargs ) break;
 	}
 	char skip = 0;

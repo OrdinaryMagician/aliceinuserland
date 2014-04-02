@@ -69,7 +69,7 @@ Will do:
   - truncate
   - tsort
   - tty
-  - uname
+  X uname
   - unexpand
   - uniq
   - unlink
