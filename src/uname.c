@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>
 #include <stdio.h>
 #include "helpers.h"
 #define O_KERN 1
@@ -20,8 +19,6 @@
 #define O_PLAT 64
 #define O_OPER 128
 #define O_ALL  255
-#define O_DIST 256
-#define O_ALLX 511
 #if defined(__aliceos__)
 # define OSNAME "AliceOS"
 #elif defined(__linux__)||defined(linux)||defined(__linux)
@@ -72,7 +69,7 @@
 # define OSNAME "Unknown"
 #endif
 
-unsigned short opt = 0;
+unsigned char opt = 0;
 
 typedef struct
 {
@@ -83,9 +80,8 @@ typedef struct
 	char mach[256];
 	char proc[256];
 	char oper[256];
-	char dist[256];
 } uname_t;
-uname_t au_uname = {{0},{0},{0},{0},{0},{0},{0},{0}};
+uname_t au_uname = {{0},{0},{0},{0},{0},{0},{0}};
 
 void getuname( void )
 {
@@ -114,61 +110,6 @@ void getuname( void )
 	}
 	else strcpy(au_uname.proc,"Unknown");
 	strcpy(au_uname.oper,OSNAME);
-	// this part is really hard because there is no proper standard
-	// check for <distroname>-release files (not all of them, of course)
-	if ( !access("/etc/fedora-release",F_OK) )
-		strcpy(au_uname.dist,"Fedora");
-	else if ( !access("/etc/redhat-release",F_OK) )
-		strcpy(au_uname.dist,"Red Hat");
-	else if ( !access("/etc/sles-release",F_OK) )
-		strcpy(au_uname.dist,"SuSE Linux Enterprise Server");
-	else if ( !access("/etc/SuSE-release",F_OK) )
-		strcpy(au_uname.dist,"SuSE");
-	else if ( !access("/etc/ubuntu-release",F_OK) )
-		strcpy(au_uname.dist,"Ubuntu");
-	else if ( !access("/etc/debian-release",F_OK) )
-		strcpy(au_uname.dist,"Debian");
-	else if ( !access("/etc/funtoo-release",F_OK) )
-		strcpy(au_uname.dist,"Funtoo");
-	else if ( !access("/etc/gentoo-release",F_OK) )
-		strcpy(au_uname.dist,"Gentoo");
-	else if ( !access("/etc/arch-release",F_OK) )
-		strcpy(au_uname.dist,"Arch");
-	else if ( !access("/etc/slackware-release",F_OK) )
-		strcpy(au_uname.dist,"Slackware");
-	else if ( !access("/etc/crux-release",F_OK) )
-		strcpy(au_uname.dist,"CRUX");
-	// more future-proofing because why the heck not?
-	else if ( !access("/etc/alice-release",F_OK) )
-		strcpy(au_uname.dist,"Tuxice");
-	// check lsb-release
-	else if ( (fp=fopen("/etc/lsb-release","r")) )
-	{
-		char line[256];
-		while ( !feof(fp) && strncmp(line,"DISTRIB_ID",10) )
-			fgets(line,255,fp);
-		fclose(fp);
-		if ( !strncmp(line,"DISTRIB_ID",10) )
-		{
-			*strchr(line,'\n') = 0;
-			strcpy(au_uname.dist,strchr(line,'=')+1);
-		}
-	}
-	// check os-release
-	else if ( (fp=fopen("/etc/os-release","r")) )
-	{
-		char line[256];
-		while ( !feof(fp) && strncmp(line,"NAME",4) )
-			fgets(line,255,fp);
-		fclose(fp);
-		if ( !strncmp(line,"NAME",4) )
-		{
-			*strrchr(line,'\n') = 0;
-			strcpy(au_uname.dist,strchr(line,'=')+1);
-		}
-	}
-	// no luck
-	if ( !(*au_uname.dist) ) strcpy(au_uname.dist,"Unknown");
 }
 
 void printuname( void )
@@ -186,13 +127,11 @@ void printuname( void )
 		printf(fmt+(i++<=0),au_uname.kver);
 	if ( opt&O_MACH )
 		printf(fmt+(i++<=0),au_uname.mach);
-	/*if ( opt&O_PROC && ((opt != O_ALL) || ((opt == O_ALL)
+	if ( opt&O_PROC && ((opt != O_ALL) || ((opt == O_ALL)
 		&& strcmp(au_uname.proc,"Unknown"))) )
 		printf(fmt+(i++<=0),au_uname.proc);
 	if ( opt&O_PLAT )
-		printf(fmt+(i++<=0),au_uname.mach);*/
-	if ( opt&O_DIST )
-		printf(fmt+(i++<=0),au_uname.dist);
+		printf(fmt+(i++<=0),au_uname.mach);
 	if ( opt&O_OPER )
 		printf(fmt+(i++<=0),au_uname.oper);
 	putchar('\n');
@@ -205,14 +144,8 @@ void getopts( const char *arg )
 	{
 		switch ( arg[i] )
 		{
-		case 'A':
-			opt |= O_ALLX;
-			break;
 		case 'a':
 			opt |= O_ALL;
-			break;
-		case 'd':
-			opt |= O_DIST;
 			break;
 		case 'i':
 		case 'M':
@@ -248,11 +181,13 @@ int main( int argc, char **argv )
 {
 	int i=1;
 	getuname();
-	if ( argc == 1 )
-		opt = O_HOST;
-	else while ( i<argc )
-		if ( (argv[i][0] == '-') && isin(argv[i][1],"AadiMmnoprsv") )
-			getopts(argv[i++]+1);
+	while ( i<argc )
+	{
+		if ( (argv[i][0] == '-') && isin(argv[i][1],"aiMmnoprsv") )
+			getopts(argv[i]+1);
+		i++;
+	}
+	if ( !opt ) opt |= O_KERN;
 	printuname();
 	return 0;
 }
