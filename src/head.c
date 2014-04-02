@@ -1,14 +1,13 @@
 /*
 	head.c : Print first n lines of a text.
-	(C)2012-2013 Marisa Kirisame, UnSX Team.
+	(C)2012-2014 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdlib.h>
 #include "helpers.h"
 
 int head( int nl, char *fname )

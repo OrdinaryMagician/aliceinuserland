@@ -1,0 +1,112 @@
+As part of the "full refactor" of the project, a progresslog file has been
+created.
+
+Legend:
+- To do
+X Done
+P Partial
+F Failed
+C In progress
+
+Will do:
+  - [
+  - base64
+  X basename
+  X cat
+  - chmod
+  - chown
+  - chroot
+  - comm
+  - cp
+  - csplit
+  - cut
+  - date
+  - dd
+  - df
+  X dirname
+  - du
+  X echo
+  - env
+  - expand
+  - expr
+  X false
+  - fold
+  X head
+  - id
+  - join
+  - link
+  - ln
+  X logname
+  - ls
+  - mkdir
+  - mkfifo
+  - mknod
+  - mv
+  - nice
+  - nl
+  - nohup
+  - od
+  - paste
+  - pathchk
+  X printenv
+  - pwd
+  - readlink
+  - realpath
+  - rm
+  - rmdir
+  X sleep
+  - sort
+  - split
+  - stat
+  - stty
+  X sync
+  - tail
+  - tee
+  - test
+  - touch
+  - tr
+  X true
+  - truncate
+  - tsort
+  - tty
+  - uname
+  - unexpand
+  - uniq
+  - unlink
+  - users
+  - wc
+  - who
+  X yes
+Might do:
+  - chgrp
+  - cksum
+  - factor
+  - fmt
+  - md5sum
+  - sha1sum
+  - sha224sum
+  - sha256sum
+  - sha384sum
+  - sha512sum
+  - sum
+Harmful but might be needed:
+  - chcon
+  - dir
+  - dircolors
+  - hostid
+  - install
+  - mktemp
+  - nproc
+  - pinky
+  - pr
+  - printf
+  - ptx
+  - runcon
+  - seq
+  - shred
+  - shuf
+  - stdbuf
+  - tac
+  - timeout
+  - vdir
+  - whoami

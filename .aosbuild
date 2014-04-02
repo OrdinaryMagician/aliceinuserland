@@ -1,0 +1,236 @@
+#!/bin/sh
+# Copyright (c) 2013 UnSX Team
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# some needed options
+shopt -s nullglob
+
+# red message
+function aos_rmsg()
+{
+	echo -e "\e[1;31m[${1}] \e[0m${2}"
+}
+
+# green message
+function aos_gmsg()
+{
+	echo -e "\e[1;32m[${1}] \e[0m${2}"
+}
+
+# set compiler flags
+function aos_cflags()
+{
+	unset CFLAGS
+	for f in "$@"
+	do
+		CFLAGS=( "${CFLAGS[@]}" "$f" )
+	done
+}
+
+# set linker flags
+function aos_lflags()
+{
+	unset LFLAGS
+	for f in "$@"
+	do
+		LFLAGS=( "${LFLAGS[@]}" "$f" )
+	done
+}
+
+# add compiler flags
+function aos_addcflags()
+{
+	for f in "$@"
+	do
+		CFLAGS=( "${CFLAGS[@]}" "$f" )
+	done
+}
+
+# add linker flags
+function aos_addlflags()
+{
+	for f in "$@"
+	do
+		LFLAGS=( "${LFLAGS[@]}" "$f" )
+	done
+}
+
+# add packages
+function aos_pkg()
+{
+	for pkg in "$@"
+	do
+		! pkg-config --exists "$pkg" &&
+		aos_rmsg "AOS" "Package \"$pkg\" not found" &&
+		exit 1
+		aos_addcflags $(pkg-config --cflags "$pkg")
+		aos_addlflags $(pkg-config --libs "$pkg")
+	done
+}
+
+# set compiler
+function aos_compiler()
+{
+	! which "$1" >/dev/null &&
+	aos_rmsg "AOS" "Compiler \"$1\" not found" &&
+	exit 1
+	CC="$1"
+	LN="$1"
+}
+
+# set linker
+function aos_linker()
+{
+	! which "$1" >/dev/null &&
+	aos_rmsg "AOS" "Linker \"$1\" not found" &&
+	exit 1
+	LN="$1"
+}
+
+# set resulting binary
+function aos_bin()
+{
+	BIN="$1"
+}
+
+# set source files
+function aos_src()
+{
+	[ -z $1 ] && return
+	unset SRC
+	unset SRCO
+	for f in "$@"
+	do
+		SRC=( "${SRC[@]}" "${f}" )
+		SRCO=( "${SRCO[@]}" "${f%%.c}.o" )
+	done
+}
+
+# add source files
+function aos_addsrc()
+{
+	[ -z $1 ] && return
+	for f in "$@"
+	do
+		SRC=( "${SRC[@]}" "${f}" )
+		SRCO=( "${SRCO[@]}" "${f%%.c}.o" )
+	done
+}
+
+# check if compilation is needed
+function aos_objchk()
+{
+	[ -n "$FORCE" ] && return 1
+	[ ! -e "$2" ] && return 1
+	[ $(stat -c %Y "$1") -le $(stat -c %Y "$2") ] && return 0
+	return 1
+}
+
+# check if link is needed
+function aos_binchk()
+{
+	[ -n "$FORCE" ] && return 1
+	[ ! -e $BIN ] && return 1
+	[ -n "$CHANGED" ] && return 1
+	return 0
+}
+
+# compile one file
+function aos_cc()
+{
+	aos_objchk "$1" "$2" && return 0
+	CHANGED=0
+	aos_gmsg "CC" "$(basename "$1") -> $(basename "$2")"
+	$CC ${CFLAGS[@]} -c -o "$2" "$1" && return 0
+	aos_rmsg "AOS" "Errors occured when building"
+	return 1
+}
+
+# final link
+function aos_link()
+{
+	aos_binchk && return 0
+	aos_gmsg "CC" $(basename "$BIN")
+	$CC ${LFLAGS[@]} -o "$BIN" ${SRCO[@]} && return 0
+	aos_rmsg "AOS" "Errors occured when linking"
+	return 1
+}
+
+# delete a file
+function aos_rm()
+{
+	[ -e "$1" ] && aos_gmsg "RM" "$(basename "$1")" && rm "$1"
+	return 0
+}
+
+# clean up
+function aos_clean()
+{
+	[ -z "$SRC" ] && aos_rmsg "AOS" "No source files" && return 1
+	for f in "${SRCO[@]}"
+	do
+		! aos_rm "$f" && return 1
+	done
+	[ -n "$CLEANALL" ] && aos_rm "$BIN"
+	return $?
+}
+
+# build everything
+function aos_build()
+{
+	[ -z "$SRC" ] && aos_rmsg "AOS" "No source files" && exit 1
+	for f in "${SRC[@]}"
+	do
+		! aos_cc "$f" "${f%%.c}.o" && return 1
+	done
+	aos_link
+	return $?
+}
+
+# entry point
+function aos_main()
+{
+	unset CHANGED
+	unset CLEANALL
+	unset FORCE
+	if [ -z $1 ]
+	then
+		aos_build
+		return $?
+	fi
+	case "$1" in
+		veryclean)
+			CLEANALL=0
+			aos_clean
+			return $?
+			;;
+		clean)
+			aos_clean
+			return $?
+			;;
+		force)
+			FORCE=0
+			aos_build
+			return $?
+			;;
+	esac
+	echo "usage: ./build [veryclean|clean|force]"
+	return 0
+}

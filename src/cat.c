@@ -1,26 +1,23 @@
 /*
 	cat.c : Concatenate files.
-	(C)2012-2013 Marisa Kirisame, UnSX Team.
+	(C)2012-2014 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
+#include <fcntl.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <fcntl.h>
+#include <stdlib.h>
 #include "helpers.h"
 
 #ifndef BLOCKSIZE
 #define BLOCKSIZE 131072
 #endif
 
-int spew( const char *fname, int blocksize )
+int cat( const char *fname, int blocksize )
 {
-	int filedes = 0;
-	int retrn = 0;
+	int filedes = 0, retrn = 0;
 	char block[blocksize];
 	if ( (filedes = open(fname,O_RDONLY)) == -1 )
 		return bail("cat: %s: %s\n",fname,strerror(errno));
@@ -50,12 +47,9 @@ int main( int argc, char **argv )
 {
 	int blksize = 0;
 	char *gotblk = getenv("AUIO_BLKSIZE");
-	blksize = ((gotblk!=NULL)&&(atoi(gotblk)>0))?atoi(gotblk):BLOCKSIZE;
-	if ( argc <= 1 )
-		return spew("/dev/stdin",blksize);
+	blksize = (gotblk && (atoi(gotblk) > 0))?atoi(gotblk):BLOCKSIZE;
+	if ( argc <= 1 ) return cat("/dev/stdin",blksize);
 	int i = 1;
-	while ( i < argc )
-		if ( spew(argv[i++],blksize) )
-			return 1;
+	while ( i < argc ) if ( cat(argv[i++],blksize) ) return 1;
 	return 0;
 }

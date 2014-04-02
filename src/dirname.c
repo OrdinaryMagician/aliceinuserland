@@ -1,6 +1,6 @@
 /*
 	dirname.c : print the path of the directory something is on.
-	(C)2012-2013-2013 Marisa Kirisame, UnSX Team.
+	(C)2012-2014 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
@@ -8,20 +8,15 @@
 
 int main( int argc, char **argv )
 {
-	if ( argc <= 1 )
-		return 1;
-	char *dir = argv[1];
-	char *find = dir;
+	if ( argc <= 1 ) return 1;
+	char *dir = argv[1], *find = dir;
 	while ( *argv[1] )
 	{
-		if ( *argv[1] == '/' && *(argv[1]+1) )
-			find = argv[1];
+		if ( *argv[1] == '/' && *(argv[1]+1) ) find = argv[1];
 		argv[1]++;
 	}
-	if ( *find != '/' )
-		return printf(".\n")&0;
-	if ( find == dir )
-		return printf("/\n")&0;
+	if ( *find != '/' ) return puts(".")&0;
+	if ( find == dir ) return puts("/")&0;
 	*find = 0;
-	return printf("%s\n",dir)&0;
+	return puts(dir)&0;
 }

@@ -1,6 +1,6 @@
 /*
 	printenv.c : print all environment variables.
-	(C)2012-2013 Marisa Kirisame, UnSX Team.
+	(C)2012-2014 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
@@ -8,7 +8,7 @@
 
 int main( int argc, char **argv )
 {
-	argv += argc;
-	while ( *(argv) && (printf("%s\n",*(argv++)) >= 0) );
+	argv += argc+1;
+	while ( *argv && puts(*(argv++)) >= 0 );
 	return 0;
 }

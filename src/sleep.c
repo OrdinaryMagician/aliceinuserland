@@ -1,14 +1,14 @@
 /*
 	sleep.c : wait for some time
-	(C)2012-2013 Marisa Kirisame, UnSX Team.
+	(C)2012-2014 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
 #define _BSD_SOURCE	// won't build with musl unless I set this
 #include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
 #include <sys/time.h>
+#include <signal.h>
+#include <unistd.h>
 
 void endwait()
 {

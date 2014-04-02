@@ -1,6 +1,6 @@
 /*
 	helpers.c : some "few" helper functions
-	(C)2012-2013 Marisa Kirisame, UnSX Team.
+	(C)2012-2014 Marisa Kirisame, UnSX Team.
 	Part of Au, the Alice in Userland project.
 	Released under the MIT License.
 */
@@ -23,9 +23,7 @@ int bail( const char *fmt, ... )
 int isin( const char c, const char *set )
 {
 	int i = -1;
-	while ( set[++i] != '\0' )
-		if ( c == set[i] )
-			return 1;
+	while ( set[++i] != '\0' ) if ( c == set[i] ) return 1;
 	return 0;
 }
 
@@ -33,23 +31,20 @@ int isin( const char c, const char *set )
 void nprints( const char *s, const int len )
 {
 	int i;
-	for ( i=0; i<len; i++ )
-		putchar(s[i]);
+	for ( i=0; i<len; i++ ) putchar(s[i]);
 }
 
 /* try to interpret a character as an hexadecimal digit */
 int ctoh( const unsigned char c )
 {
-	return ((c>='0')&&(c<='9'))?(c-'0'):
-		((c>='a')&&(c<='f'))?((c-'a')+10):
+	return ((c>='0')&&(c<='9'))?(c-'0'):((c>='a')&&(c<='f'))?((c-'a')+10):
 		((c>='A')&&(c<='F'))?((c-'A')+10):0;
 }
 
 /* print the UTF-8 char sequence corresponding to a specific unicode value */
 void pututf8( unsigned long unichar )
 {
-	if ( unichar <= 0x7f )
-		putchar(unichar%0x80);
+	if ( unichar <= 0x7f ) putchar(unichar%0x80);
 	else if ( unichar <= 0x7ff )
 	{
 		putchar(0xC0+(unichar>>6)%0x20);
@@ -156,8 +151,7 @@ int descape( const char *str )
 	unsigned long unich = 0;
 	if ( str[0] != '\\' )
 	{
-		if ( str[0] == 0 )
-			return 0;
+		if ( str[0] == 0 ) return 0;
 		putchar(str[0]);
 		return 1;
 	}
@@ -201,8 +195,7 @@ int descape( const char *str )
 			trch = trch*8 + ctoh(str[i]);
 			nc--;
 		}
-		if ( trch )
-			putchar(trch);
+		if ( trch ) putchar(trch);
 		return i;
 	case 'x':
 		nc = 2;
@@ -239,5 +232,6 @@ int descape( const char *str )
 		putchar(str[i]);
 		return 2;
 	}
+	return 0;
 }
 
