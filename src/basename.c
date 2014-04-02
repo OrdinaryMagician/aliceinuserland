@@ -10,7 +10,9 @@ int main( int argc, char **argv )
 {
 	if ( argc <= 1 ) return 1;
 	char *base = strrchr(argv[1],'/');
-	while ( base && !base[1] && (base != argv[1]) && (*base == '/') && !(*(base--)=0) );
+	while ( base && !base[1] && (base != argv[1]) && (*base == '/')
+		&& !(*(base--)=0) );
 	base = strrchr(argv[1],'/');
-	return puts(((base == argv[1]) && !base[1])?base:base?(base+1):argv[1])&0;
+	return puts(((base == argv[1]) && !base[1])?base:base?(base+1)
+		:argv[1])&0;
 }
