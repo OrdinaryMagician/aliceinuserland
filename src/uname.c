@@ -24,7 +24,7 @@
 #elif defined(__linux__)||defined(linux)||defined(__linux)
 # if defined(__ANDROID__)
 #  define OSNAME "Android"
-# elif defined(__gnu_linux__)&&!defined(OVERRIDE_GNU)
+# elif defined(__GLIBC__)
 #  define OSNAME "GNU/Linux"
 # else
 #  define OSNAME "Linux"
@@ -36,7 +36,7 @@
 #  define OSNAME "Windows"
 # endif
 #elif defined(__FreeBSD__)
-# if defined(__GLIBC__)&&!defined(OVERRIDE_GNU)
+# if defined(__GLIBC__)
 #  define OSNAME "GNU/kFreeBSD"
 # else
 #  define OSNAME "FreeBSD"
