@@ -15,22 +15,21 @@
 #define BLOCKSIZE 131072
 #endif
 
-int cat( const char *fname, int blocksize )
+int cat( const char *fname)
 {
 	int filedes = 0, retrn = 0;
-	char block[blocksize];
+	char block[BLOCKSIZE];
 	if ( (filedes = open(fname,O_RDONLY)) == -1 )
 		return bail("cat: %s: %s\n",fname,strerror(errno));
 	do
 	{
-		retrn = read(filedes,block,blocksize);
+		retrn = read(filedes,block,BLOCKSIZE);
 		if ( retrn == -1 )
 		{
 			close(filedes);
 			return bail("cat: %s: %s\n",fname,strerror(errno));
 		}
-		if ( !retrn )
-			continue;
+		if ( !retrn ) continue;
 		retrn = write(STDOUT_FILENO,block,retrn);
 		if ( retrn == -1 )
 		{
@@ -45,11 +44,8 @@ int cat( const char *fname, int blocksize )
 
 int main( int argc, char **argv )
 {
-	int blksize = 0;
-	char *gotblk = getenv("AUIO_BLKSIZE");
-	blksize = (gotblk && (atoi(gotblk) > 0))?atoi(gotblk):BLOCKSIZE;
-	if ( argc <= 1 ) return cat("/dev/stdin",blksize);
+	if ( argc <= 1 ) return cat("/dev/stdin");
 	int i = 1;
-	while ( i < argc ) if ( cat(argv[i++],blksize) ) return 1;
+	while ( i < argc ) if ( cat(argv[i++]) ) return 1;
 	return 0;
 }
