@@ -37,6 +37,6 @@ int main( int argc, char **argv )
 	strcat(joinstr,"\n");
 	for ( i=0; i<BLOCKSIZE; i+=strsiz ) strncpy(block+i,joinstr,strsiz);
 	if ( i>BLOCKSIZE ) i-= strsiz-1;
-	while( write(STDOUT_FILENO,block,i) >= 0 );
+	while ( write(STDOUT_FILENO,block,i) >= 0 );
 	return bail("yes: /dev/stdout: %s\n",strerror(errno))&0;
 }
