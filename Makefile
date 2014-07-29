@@ -1,6 +1,6 @@
-CFLAGS := -std=c99 -Wall -Wextra -Werror -pedantic -Os -pipe
+CFLAGS := -std=c99 -Wall -Wextra -Werror -pedantic -Os -pipe -lm
 UTILS := echo true false sleep cat yes printenv basename dirname head sync \
-	 logname
+	 logname wc
 SOURCES := $(patsubst %.c,%.o,$(wildcard src/*.c))
 all: $(SOURCES) $(UTILS)
 .c.o:
@@ -29,6 +29,8 @@ sync:
 	$(CC) $(CFLAGS) src/sync.o -o bin/sync
 logname:
 	$(CC) $(CFLAGS) src/logname.o -o bin/logname
+wc:
+	$(CC) $(CFLAGS) src/wc.o -o bin/wc
 veryclean: clean
 	rm -f bin/*
 clean:
